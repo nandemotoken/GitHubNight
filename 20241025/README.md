@@ -1,3 +1,13 @@
-## 今日の日記
-- 蒲田で舞台を見ました
-- 夜までワイワイしていたので今日はお休みです
+## 本日の開発
+- GitHubリポジトリの作成
+- mainブランチ作成
+- Render.comつなぎこみ
+- ~~https://two0241024.onrender.com~~
+- やっぱりフロントはGitHubPagesにしようかな
+- https://nandemotoken.github.io/GitHubNight/20241025/dist/index.html
+
+## 本日の日記
+- ぶどうがおいしい
+
+## 本日のBGM
+- 機動戦士ガンダム 1話～4話
