@@ -1,0 +1,4 @@
+node_modules
+.vscode/*
+# 仅同步 settings
+!.vscode/settings.json
