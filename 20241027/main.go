@@ -135,14 +135,14 @@ func validateTotalSeats(parties []Party) error {
 func main() {
     // 2024年10月27日選挙の速報データ
 		parties := []Party{
-			{Name: "自民", Seats: 162},
-			{Name: "公明", Seats: 20},
-			{Name: "立民", Seats: 134},
-			{Name: "維新", Seats: 32},
-			{Name: "共産", Seats: 6},
-			{Name: "国民", Seats: 22},
-			{Name: "れいわ", Seats: 7},
-			{Name: "諸派", Seats: 82},
+			{Name: "自民", Seats: 191},
+			{Name: "公明", Seats: 24},
+			{Name: "立民", Seats: 148},
+			{Name: "維新", Seats: 38},
+			{Name: "共産", Seats: 8},
+			{Name: "国民", Seats: 28},
+			{Name: "れいわ", Seats: 9},
+			{Name: "諸派", Seats: 19},
 	}
 
     // 総議席数の検証
