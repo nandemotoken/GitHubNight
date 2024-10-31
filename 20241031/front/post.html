@@ -1,0 +1,47 @@
+<!-- post.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記事詳細</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .post img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="post"></div>
+    <p><a href="/">← 戻る</a></p>
+
+    <script>
+        async function fetchPost() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/posts/${slug}`);
+                const post = await response.json();
+                
+                const postContainer = document.getElementById('post');
+                postContainer.innerHTML = `
+                    <h1>${post.title}</h1>
+                    <div class="post-content">${post.html}</div>
+                `;
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        fetchPost();
+    </script>
+</body>
+</html>
