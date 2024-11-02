@@ -4,7 +4,7 @@
 - Render.comつなぎこみ
 - ~~https://two0241024.onrender.com~~
 - やっぱりフロントはGitHubPagesにしようかな
-- https://nandemotoken.github.io/GitHubNight/20241025/dist/index.html
+- https://nandemotoken.github.io/GitHubNight/202410/1025/dist/index.html
 
 ## 本日の日記
 - ぶどうがおいしい
