@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - VITE_GHOST_URL=http://localhost:2368
+      - VITE_GHOST_CONTENT_API_KEY=a48db2bda80dd3e4b544fd5ad2
+
+networks:
+  default:
+    driver: bridge

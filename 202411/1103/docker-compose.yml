@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  ghost:
+    image: ghost:5-alpine
+    ports:
+      - "2368:2368"
+    volumes:
+      - ghost-content:/var/lib/ghost/content
+    environment:
+      - url=http://localhost:2368
+      - NODE_ENV=development
+      # メール設定（開発環境ではMailhogを使用）
+      - mail__transport=SMTP
+      - mail__options__host=mailhog
+      - mail__options__port=1025
+      # データベース設定
+      - database__client=sqlite3
+      - database__connection__filename=/var/lib/ghost/content/data/ghost.db
+    networks:
+      - ghost-network
+
+  # 開発用メールサーバー
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - ghost-network
+
+volumes:
+  ghost-content:
+
+networks:
+  ghost-network:
+    driver: bridge
