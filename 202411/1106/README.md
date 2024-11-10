@@ -2,6 +2,8 @@
 - PockemoncardPocketのジムバッジをNFTでやれたら楽しいのでは
 - GitHubのAchievementのAchievementについて調べる
 - 「YOLO」をてにいれたぞ！
+- パブリックリポジトリでの活動だけがAchievementになるっぽいですね
+- ジムバッジNFTシステムを作ってGitHubに公開してスターをもらったら「Starstruck」ももらえそうですね。
 
 ## 本日の日記
 - 早朝の大規模案件本番と、深夜の大規模案件本番が同時にあった日なので、早朝と深夜に仕事をしました。
