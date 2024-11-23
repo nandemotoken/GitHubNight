@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Web3 Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@toruslabs/torus-embed@1.35.3/dist/torus.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #1DA1F2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #1a8cd8;
+        }
+        #status {
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Twitter Web3 Login</h1>
+        <button onclick="login()">Twitterでログイン</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        async function login() {
+            try {
+                const torus = new window.Torus({
+                    buttonPosition: "bottom-left"
+                });
+                
+                await torus.init({
+                    showTorusButton: false,
+                    network: {
+                        host: "mainnet",
+                        chainId: 1,
+                    },
+                    whiteLabel: {
+                        theme: {
+                            isDark: false,
+                            colors: {
+                                torusBrand1: '#1DA1F2'
+                            }
+                        }
+                    },
+                    enabledVerifiers: {
+                        google: false,
+                        facebook: false,
+                        discord: false,
+                        twitch: false,
+                        reddit: false,
+                        apple: false,
+                        github: false,
+                        linkedin: false,
+                        weibo: false,
+                        line: false,
+                        email: false,
+                        passwordless: false,
+                        twitter: true
+                    }
+                });
+                
+                await torus.login({ loginProvider: "twitter" });
+                
+                const web3 = new Web3(torus.provider);
+                const accounts = await web3.eth.getAccounts();
+                
+                document.getElementById('status').innerHTML = 
+                    `ログイン成功！<br>アドレス: ${accounts[0]}`;
+            } catch (error) {
+                document.getElementById('status').innerHTML = 
+                    `エラーが発生しました: ${error.message}`;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
