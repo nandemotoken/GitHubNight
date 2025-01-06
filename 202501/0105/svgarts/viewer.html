@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>カラフルSVGアート</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f0f0f0;
+        }
+        .viewer {
+            position: relative;
+        }
+        .navigation-hint {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #666;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="viewer">
+        <img width="400" height="400" alt="SVG Art">
+        <div class="navigation-hint">← →キーで切り替え</div>
+    </div>
+
+    <script>
+        async function findSVGFiles() {
+            const artworks = [];
+            let index = 1;
+            
+            while (true) {
+                const filename = `arts/${index}.svg`;
+                try {
+                    const response = await fetch(filename, { method: 'HEAD' });
+                    if (response.ok) {
+                        artworks.push(filename);
+                        index++;
+                    } else {
+                        break;
+                    }
+                } catch {
+                    break;
+                }
+            }
+            return artworks;
+        }
+
+        let currentIndex = 0;
+        const img = document.querySelector('img');
+        let artworks = [];
+
+        // 初期化
+        findSVGFiles().then(files => {
+            artworks = files;
+            if (artworks.length > 0) {
+                img.src = artworks[0];
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (artworks.length === 0) return;
+            
+            if (e.key === 'ArrowRight') {
+                currentIndex = (currentIndex + 1) % artworks.length;
+                img.src = artworks[currentIndex];
+            } else if (e.key === 'ArrowLeft') {
+                currentIndex = (currentIndex - 1 + artworks.length) % artworks.length;
+                img.src = artworks[currentIndex];
+            }
+        });
+    </script>
+</body>
+</html> 

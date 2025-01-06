@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- 基本図形の定義 -->
+        <g id="triangleUnit">
+            <path d="M0,0 L20,-35 L40,0 Z" fill="#FF6B6B">
+                <animate
+                    attributeName="opacity"
+                    values="0.8;0.4;0.8"
+                    dur="1.5s"
+                    repeatCount="indefinite"
+                />
+            </path>
+        </g>
+    </defs>
+
+    <!-- 中心点を移動 -->
+    <g transform="translate(200, 200)">
+        <!-- 8つの方向に展開するパターン -->
+        <g>
+            <!-- 各方向に8つの三角形を配置 -->
+            <g>
+                <use href="#triangleUnit" transform="translate(0, 0)">
+                    <animateTransform
+                        attributeName="transform"
+                        type="scale"
+                        values="0;1"
+                        dur="0.5s"
+                        begin="0s"
+                        fill="freeze"
+                    />
+                </use>
+                <use href="#triangleUnit" transform="translate(0, 40)">
+                    <animateTransform
+                        attributeName="transform"
+                        type="scale"
+                        values="0;1"
+                        dur="0.5s"
+                        begin="0.1s"
+                        fill="freeze"
+                    />
+                </use>
+                <use href="#triangleUnit" transform="translate(0, 80)">
+                    <animateTransform
+                        attributeName="transform"
+                        type="scale"
+                        values="0;1"
+                        dur="0.5s"
+                        begin="0.2s"
+                        fill="freeze"
+                    />
+                </use>
+            </g>
+
+            <!-- 8方向に複製して回転 -->
+            <g>
+                <use href="#triangleUnit" transform="rotate(45) translate(0, 0)"/>
+                <use href="#triangleUnit" transform="rotate(90) translate(0, 0)"/>
+                <use href="#triangleUnit" transform="rotate(135) translate(0, 0)"/>
+                <use href="#triangleUnit" transform="rotate(180) translate(0, 0)"/>
+                <use href="#triangleUnit" transform="rotate(225) translate(0, 0)"/>
+                <use href="#triangleUnit" transform="rotate(270) translate(0, 0)"/>
+                <use href="#triangleUnit" transform="rotate(315) translate(0, 0)"/>
+            </g>
+        </g>
+
+        <!-- 全体の回転アニメーション -->
+        <animateTransform
+            attributeName="transform"
+            type="rotate"
+            from="0"
+            to="360"
+            dur="20s"
+            repeatCount="indefinite"
+            additive="sum"
+        />
+
+        <!-- 中心の円 -->
+        <circle r="15" fill="#4ECDC4">
+            <animate
+                attributeName="r"
+                values="15;20;15"
+                dur="2s"
+                repeatCount="indefinite"
+            />
+        </circle>
+    </g>
+</svg> 

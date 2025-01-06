@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <animateTransform
+            id="pulseAnim"
+            attributeName="transform"
+            type="scale"
+            values="1;1.2;1"
+            dur="3s"
+            repeatCount="indefinite"
+        />
+    </defs>
+
+    <g>
+        <circle cx="200" cy="200" r="100" fill="#FF6B6B" opacity="0.7">
+            <use href="#pulseAnim" />
+        </circle>
+        <circle cx="150" cy="150" r="100" fill="#4ECDC4" opacity="0.7">
+            <animateTransform
+                attributeName="transform"
+                type="scale"
+                values="1;1.2;1"
+                dur="3s"
+                begin="1s"
+                repeatCount="indefinite"
+            />
+        </circle>
+        <circle cx="250" cy="150" r="100" fill="#45B7D1" opacity="0.7">
+            <animateTransform
+                attributeName="transform"
+                type="scale"
+                values="1;1.2;1"
+                dur="3s"
+                begin="2s"
+                repeatCount="indefinite"
+            />
+        </circle>
+    </g>
+</svg> 
