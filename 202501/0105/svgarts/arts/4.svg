@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- 軌跡用のフィルター -->
+        <filter id="trail">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+        </filter>
+    </defs>
+
+    <!-- 背景の大きな円 -->
+    <circle cx="200" cy="200" r="180" fill="none" stroke="#eee" stroke-width="2"/>
+
+    <!-- 高速で動く円たち -->
+    <g>
+        <!-- 円1: 時計回り -->
+        <circle r="8" fill="#FF6B6B" filter="url(#trail)">
+            <animateMotion
+                dur="2s"
+                repeatCount="indefinite"
+                path="M200,20 A180,180 0 1 1 200,380 A180,180 0 1 1 200,20"
+            >
+                <mpath href="#orbit"/>
+            </animateMotion>
+        </circle>
+
+        <!-- 円2: 反時計回り、少し遅れて -->
+        <circle r="8" fill="#4ECDC4" filter="url(#trail)">
+            <animateMotion
+                dur="2s"
+                begin="0.5s"
+                repeatCount="indefinite"
+                path="M200,20 A180,180 0 1 0 200,380 A180,180 0 1 0 200,20"
+            />
+        </circle>
+
+        <!-- 円3: ジグザグ -->
+        <circle r="6" fill="#45B7D1">
+            <animateMotion
+                dur="1.5s"
+                repeatCount="indefinite"
+                path="M200,200 L300,100 L100,100 L300,300 L100,300 Z"
+            />
+        </circle>
+
+        <!-- 円4: バウンド -->
+        <circle r="10" fill="#FFD93D">
+            <animateMotion
+                dur="3s"
+                repeatCount="indefinite"
+                path="M200,50 Q400,200 200,350 Q0,200 200,50"
+            />
+            <animate
+                attributeName="r"
+                values="10;6;10"
+                dur="0.5s"
+                repeatCount="indefinite"
+            />
+        </circle>
+
+        <!-- 小さな追従する円たち -->
+        <g>
+            <circle r="4" fill="#FF6B6B" opacity="0.6">
+                <animateMotion
+                    dur="2s"
+                    begin="0.1s"
+                    repeatCount="indefinite"
+                    path="M200,20 A180,180 0 1 1 200,380 A180,180 0 1 1 200,20"
+                />
+            </circle>
+            <circle r="4" fill="#4ECDC4" opacity="0.6">
+                <animateMotion
+                    dur="2s"
+                    begin="0.6s"
+                    repeatCount="indefinite"
+                    path="M200,20 A180,180 0 1 0 200,380 A180,180 0 1 0 200,20"
+                />
+            </circle>
+        </g>
+    </g>
+</svg> 
