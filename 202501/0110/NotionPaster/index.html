@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion Text Cleaner</title>
+    <style>
+        body {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-family: -apple-system, system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f5f5f5;
+        }
+        #input {
+            width: 100%;
+            height: 100px;
+            padding: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+            background: white;
+            transition: background-color 0.2s;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            outline: none;
+        }
+        #input:empty:before {
+            content: 'ここにテキストを貼り付けてください';
+            color: #999;
+        }
+        .flash {
+            background: #e3f6ec !important;
+        }
+    </style>
+</head>
+<body>
+    <div contenteditable="true" id="input"></div>
+
+    <script>
+        document.getElementById('input').addEventListener('paste', async (e) => {
+            e.preventDefault();
+            const html = e.clipboardData.getData('text/html');
+            const text = e.clipboardData.getData('text/plain');
+            
+            // 入力表示用のテキストを整形（1行に収める）
+            const displayText = (html || text)
+                .replace(/<!--.*?-->/g, '')
+                .replace(/<[^>]*>/g, ' ')
+                .replace(/&nbsp;/g, ' ')
+                .replace(/\s+/g, ' ')
+                .replace(/[\n\r]/g, ' ')
+                .trim();
+
+            // クリップボード用のテキストを整形（同じ処理）
+            const clipboardText = displayText;
+            
+            // 入力欄に表示
+            document.getElementById('input').textContent = displayText;
+            
+            try {
+                // クリップボードにコピー
+                await navigator.clipboard.writeText(clipboardText);
+                document.getElementById('input').classList.add('flash');
+                setTimeout(() => {
+                    document.getElementById('input').classList.remove('flash');
+                }, 200);
+            } catch (err) {
+                console.error('コピーエラー:', err);
+            }
+        });
+
+        // フォーカス時に全選択
+        document.getElementById('input').addEventListener('focus', function() {
+            document.execCommand('selectAll', false, null);
+        });
+    </script>
+</body>
+</html>
