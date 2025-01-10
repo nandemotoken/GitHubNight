@@ -103,30 +103,56 @@
 
     <div class="description">
         🌟 <span>すごい</span>：貼り付けるだけで勝手にコピーされる！<br>
-        🚀 <span>やばい</span>：改行が消える！スペースになる！<br>
-        ⚡️ <span>やばすぎ</span>：Notionに貼り付けても1行で済む！<br>
+        🚀 <span>やばい</span>：改行が自動で最適化される！<br>
+        ⚡️ <span>やばすぎ</span>：Notionに貼り付けても綺麗！<br>
     </div>
 
     <script>
+        function addSmartLineBreaks(text, avgCharsPerLine = 20) {
+            // 句読点での分割を優先
+            const segments = text.split(/([。！？])/).map((segment, i, arr) => {
+                if (i % 2 === 1) { // 句読点を前のセグメントにくっつける
+                    return '';
+                }
+                return segment + (arr[i + 1] || '');
+            }).filter(Boolean);
+
+            let result = '';
+            let currentLine = '';
+
+            segments.forEach(segment => {
+                if (currentLine.length + segment.length > avgCharsPerLine) {
+                    result += currentLine + '\n';
+                    currentLine = segment;
+                } else {
+                    currentLine += segment;
+                }
+            });
+
+            return result + currentLine;
+        }
+
         document.getElementById('input').addEventListener('paste', async (e) => {
             e.preventDefault();
             const html = e.clipboardData.getData('text/html');
             const text = e.clipboardData.getData('text/plain');
             
-            const displayText = (html || text)
+            const cleanedText = (html || text)
                 .replace(/<!--.*?-->/g, '')
                 .replace(/<[^>]*>/g, ' ')
                 .replace(/&nbsp;/g, ' ')
                 .replace(/\s+/g, ' ')
-                .replace(/[\n\r]/g, ' ')
                 .trim();
 
-            const clipboardText = displayText;
+            // 自動改行を追加
+            const formattedText = addSmartLineBreaks(cleanedText);
             
-            document.getElementById('input').textContent = displayText;
+            // 表示用のテキスト（1行）
+            document.getElementById('input').textContent = cleanedText;
             
             try {
-                await navigator.clipboard.writeText(clipboardText);
+                // クリップボードには改行入りのテキストをコピー
+                await navigator.clipboard.writeText(formattedText);
                 document.getElementById('input').classList.add('flash');
                 setTimeout(() => {
                     document.getElementById('input').classList.remove('flash');
