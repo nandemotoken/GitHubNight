@@ -25,21 +25,15 @@ async function createDailyFolder() {
             console.log('README.md は既に存在します');
         } catch {
             // README.mdテンプレート
-            const content = `# ${yearMonth}/${day} 作業記録
-
-## 今日の目標
-
-- [ ] 
-
-## 実施したこと
+            const content = `## 本日の開発
 
 - 
 
-## メモ
+## 本日の日記
 
 - 
 
-## 明日の課題
+## 本日の BGM
 
 - 
 
