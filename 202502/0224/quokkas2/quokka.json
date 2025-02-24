@@ -1,0 +1,11 @@
+{
+  "plugins": ["quokka-jquery-loader"],
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      "@babel/preset-typescript"
+    ]
+  },
+  "jsxPragma": "React"
+}
