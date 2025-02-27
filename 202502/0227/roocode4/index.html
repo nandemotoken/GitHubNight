@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ディープラーニングの技術的優位性</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="particles-container" id="particles-js"></div>
+
+    <header>
+      <div class="header-content">
+        <h1 class="glitch" data-text="ディープラーニングの技術的優位性">
+          ディープラーニングの技術的優位性
+        </h1>
+        <p class="subtitle">過去手法との比較</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="timeline-section">
+        <h2><i class="fas fa-history"></i> 過去のアプローチとその限界</h2>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-icon">
+              <i class="fas fa-cogs"></i>
+            </div>
+            <div class="timeline-content">
+              <h3>ルールベースAI（エキスパートシステム）</h3>
+              <p>
+                第2次AIブーム期に活躍したエキスパートシステムなどのルールベースAIでは、知識ベースの構築に専門家の知識収集が不可欠でした。しかしこの「知識獲得のボトルネック」により、必要な知識の入手に膨大な時間と労力がかかりがちで、知識が矛盾したり一貫性を欠く問題も生じました。またエキスパートシステムは柔軟性に欠けるため新しい状況への適応が難しく、明示的にプログラムされたルール以外の例外事象に対応できないという限界がありました。つまり、人手で構築したルールに依存するためスケーラビリティが低く、知識が増えるほど維持管理も困難になる傾向がありました。
+              </p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-icon">
+              <i class="fas fa-tree"></i>
+            </div>
+            <div class="timeline-content">
+              <h3>
+                古典的な機械学習手法（SVM・決定木・ランダムフォレストなど）
+              </h3>
+              <p>
+                第3次AIブーム前夜にはサポートベクターマシン(SVM)や決定木、ランダムフォレストといった統計的機械学習アルゴリズムが登場し、多くの分野で一定の成功を収めました。しかしこれらの手法では特徴量の設計・抽出を人手で行う必要があり、ドメイン知識に依存した試行錯誤が欠かせませんでした。モデルに投入する入力表現をエンジニアが手動で作成する必要があるため、複雑なパターンの認識や高次元データの処理には限界がありました。例えば画像認識では、従来はSIFTやHOGといった手作りの特徴量を抽出しSVMで分類するといった手順を踏んでいましたが、特徴抽出器の汎用性や性能には限界がありました。また古典的手法は深層学習ほど大量のデータを必要とせず少ないデータでも動作する利点がある一方、データ量が増えても性能向上が頭打ちになるケースが多く、モデルの大規模化にも適していませんでした。
+              </p>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-icon">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <div class="timeline-content">
+              <h3>
+                ニューラルネットワークの初期研究（バックプロパゲーションの誕生など）
+              </h3>
+              <p>
+                ニューラルネットワーク自体の研究は1950年代から始まり、パーセプトロン（単層NN）の提案やその限界指摘など紆余曲折がありました。1986年にRumelhartらによって誤差逆伝播法（バックプロパゲーション）が提案されると、多層ニューラルネットワークの学習が可能となり注目を集めました。バックプロパゲーションはニューラルネットの学習アルゴリズムのブレイクスルーであり、現在広く使われる深層学習の基本技術となっています。しかし1980年代当時はコンピュータの計算能力や利用可能なデータが限られていたため、ニューラルネットは小規模な実験に留まり、決定木やSVMなど他手法に比べ実用面で優位とは言えませんでした。1990年代には一時的な「AI冬の時代」も訪れますが、その後計算資源やデータ量の増加に伴いニューラルネット研究は下地を蓄え、2000年代に入ってから再び飛躍の機会を迎えます。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="evolution-section">
+        <h2>
+          <i class="fas fa-rocket"></i> ディープラーニングの登場とその進化
+        </h2>
+
+        <div class="card-container">
+          <div class="card" data-year="2006">
+            <div class="card-inner">
+              <div class="card-front">
+                <h3>2006年</h3>
+                <p>Hintonらのディープビリーフネットによるブレイクスルー</p>
+                <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+              </div>
+              <div class="card-back">
+                <p>
+                  2006年、Geoffrey Hintonらは「ディープビリーフネット（Deep
+                  Belief Network,
+                  DBN）」を用いた新しい学習法を発表し、これがディープラーニング興隆の嚆矢となりました。Hintonらの論文「A
+                  fast learning algorithm for deep belief
+                  nets」では、貪欲な層ごとの事前学習（pretraining）により多層ニューラルネットを効率良く訓練する手法が示されています。このブレイクスルーによって、それまで深い層を持つニューラルネットの学習が難しいとされた問題が克服され、より深いネットワークを訓練できる道が開かれました。実際、Hintonらの手法はBengioらによって他の種類の深層ネットへも適用可能であることがすぐに示され、テストデータに対する汎化性能の向上に貢献しました。この2006年の成果をきっかけに「ディープラーニング」という用語が広く使われ始め、ニューラルネット研究は第3次AIブームへと繋がっていきます。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" data-year="2012">
+            <div class="card-inner">
+              <div class="card-front">
+                <h3>2012年</h3>
+                <p>AlexNetによる画像認識革命</p>
+                <div class="card-icon"><i class="fas fa-camera"></i></div>
+              </div>
+              <div class="card-back">
+                <p>
+                  2012年には、Hintonの研究室のKrizhevskyらによるAlexNetが画像認識分野に革命をもたらしました。AlexNetは8層からなる大規模な畳み込みニューラルネットワーク(CNN)で、ImageNet
+                  Large Scale Visual Recognition Challenge
+                  2012（ILSVRC2012）においてトップ5エラー率15.3%を記録し、従来の第2位モデルの26.2%を大きく上回る圧倒的勝利を収めました。この約10%ものエラー率削減は、当時停滞していた画像認識精度を一挙に引き上げ、研究者たちにディープラーニングの潜在能力を強く印象付けました。AlexNet成功の要因としては、大規模データセット（約120万枚の画像）での終端層までの学習、効率的なGPU活用による高速学習、新しい活性化関数(ReLU)の導入やドロップアウトによる過学習抑制などが挙げられます。この成果を契機に、VGGやGoogLeNet、ResNetといった改良CNNが次々と提案され、視覚分野のみならず他のAI分野でもディープラーニングの採用が急速に拡大しました。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" data-year="2014">
+            <div class="card-inner">
+              <div class="card-front">
+                <h3>2014年</h3>
+                <p>敵対的生成ネットワーク（GAN）の登場</p>
+                <div class="card-icon"><i class="fas fa-random"></i></div>
+              </div>
+              <div class="card-back">
+                <p>
+                  2014年にはIan
+                  Goodfellowらによって敵対的生成ネットワーク（GAN）が提案され、ディープラーニングの応用範囲は生成モデルの領域へと拡大しました。GANは2つのニューラルネット（生成器と識別器）を競わせるという独創的な枠組みで、訓練データと同じ統計性質を持つ新規データを生成することを可能にします。例えば大量の写真から学習したGANは、人間が見ても実在すると錯覚するほど高精細な偽の画像を生成できるようになりました。この画期的手法は画像生成のみならずデータ拡張や異常検知など様々な応用を生み、FacebookのAI研究責任者Yann
+                  LeCunに「過去10年で機械学習における最も面白いアイデア」と言わしめるほど注目を集めました。GANの登場によって、AIはデータを「認識・分類する」だけでなく「創り出す」こともできるようになり、深層学習の可能性がさらに広がりました。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" data-year="2017">
+            <div class="card-inner">
+              <div class="card-front">
+                <h3>2017年</h3>
+                <p>Transformer（「Attention Is All You Need」）の衝撃</p>
+                <div class="card-icon"><i class="fas fa-language"></i></div>
+              </div>
+              <div class="card-back">
+                <p>
+                  2017年、GoogleのVaswaniらは画期的な論文「Attention Is All You
+                  Need」でTransformerアーキテクチャを発表し、自然言語処理(NLP)分野に新たな潮流を生み出しました。Transformerは自己注意機構(Self-Attention)のみに基づくシンプルな構造で、従来主流だったリカレントニューラルネット(RNN)や畳み込みを一切使用しないという大胆な設計です。このモデルは系列データを並列処理可能なため学習を大幅に高速化でき、GPU上での計算をフル活用してモデルを大規模化できる利点があります。登場当初は機械翻訳の性能向上が主目的でしたが、その卓越した汎用性から質疑応答や文章要約など多様なNLPタスクで従来手法を凌ぐ成果を上げました。Transformerは現在の大規模言語モデル(LLM)（BERTやGPTシリーズなど）の基本骨格となっており、論文発表からわずか数年で現代AIの基盤技術として定着しました。このように、Transformerの登場は第3次AIブーム後半における最大のブレイクスルーの一つであり、深層学習モデルの設計思想を刷新しました。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="advantages-section">
+        <h2>
+          <i class="fas fa-trophy"></i>
+          ディープラーニングが過去の手法を凌駕した理由
+        </h2>
+
+        <div class="advantages-container">
+          <div class="advantage-item">
+            <div class="advantage-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h3>自動特徴抽出の実現</h3>
+            <p>
+              ディープラーニングではモデル自身が多層の表現学習を通じて生データから最適な特徴を自動抽出します。画像認識や音声認識などでは、人間が特徴量を設計する従来の機械学習と異なり、特徴量エンジニアリングの手間を省いて高性能化を達成できます。これによりドメイン知識への依存度が低減し、複雑なパターンもネットワークが自ら学習して捉えることが可能になりました。
+            </p>
+          </div>
+
+          <div class="advantage-item">
+            <div class="advantage-icon">
+              <i class="fas fa-expand-arrows-alt"></i>
+            </div>
+            <h3>スケール可能な学習</h3>
+            <p>
+              深層学習モデルは層数やパラメータ数を増やすことでモデル容量をスケールでき、理論上きわめて複雑な関数も近似できます。実際、ディープラーニングの発展に伴いネットワークの層は何百にも及ぶ大規模モデルが登場し、そのモデルの複雑さ・サイズの増大が精度向上に直結することが示されています。一方、古典的な機械学習モデルはあまりに複雑になると過学習や計算困難に陥りやすく、深層モデルほど大規模化による性能恩恵を受けにくい傾向がありました。ディープラーニングは適切な正則化手法やアーキテクチャ設計と組み合わせることで、モデルを大きくしつつ汎化性能を維持できる点で優れています。
+            </p>
+          </div>
+
+          <div class="advantage-item">
+            <div class="advantage-icon">
+              <i class="fas fa-database"></i>
+            </div>
+            <h3>大規模データセットへの適合性</h3>
+            <p>
+              ビッグデータ時代に最適化された手法であることも深層学習の強みです。ディープラーニングのモデル精度は一般に訓練データ量に比例して向上し、データが豊富であるほど高い性能を発揮します。実際、従来は困難だった画像・音声・自然言語の高精度処理が、大量のデータをディープラーニングで学習することで可能となりました。古典的手法では特徴量設計やアルゴリズム上の制約からデータの有効活用に限界がありましたが、深層学習は大規模データから直接学習して知識を獲得できるため、データ量の爆発的増加に伴う性能向上という恩恵をフルに享受できます。
+            </p>
+          </div>
+
+          <div class="advantage-item">
+            <div class="advantage-icon">
+              <i class="fas fa-microchip"></i>
+            </div>
+            <h3>GPUの活用による計算能力向上</h3>
+            <p>
+              深層学習の台頭を支えたもう一つの柱が、ハードウェア（計算資源）の進歩です。特に2007年以降普及した汎用GPU計算(CUDAなど)の活用により、大規模なニューラルネットの訓練時間が飛躍的に短縮されました。例えばAlexNetでは当時最先端だったGPUを用いることで、従来数十倍の時間がかかっていた学習を実用的な時間内に実現しています。GPUによる並列計算はTransformerなど近年のモデルでも鍵となっており、高い並列性で学習を高速化し、より大きなモデルを訓練可能にすることでディープラーニングの性能向上を可能にしました。このように計算インフラの進化を最大限に活かせるアルゴリズムだったことも、ディープラーニングが他手法を凌駕する一因です。
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="papers-section">
+        <h2><i class="fas fa-scroll"></i> 学術論文の紹介と要点解説</h2>
+
+        <div class="papers-container">
+          <div class="paper-item">
+            <div class="paper-year">1986</div>
+            <div class="paper-content">
+              <h3>Rumelhartらによるバックプロパゲーションの導入</h3>
+              <p>
+                Rumelhart, Hinton, Williams (1986)
+                の論文では、多層ニューラルネットワークの学習アルゴリズムである<strong>誤差逆伝播法（バックプロパゲーション）</strong>が初めて提案されました。この手法により隠れ層を持つネットワークの重み調整が可能になり、ニューラルネットが
+                XOR
+                問題など非線形分類も解けるようになった点が画期的でした。バックプロパゲーションはその後の深層学習の基本となる技術で、現在のディープラーニングモデルの土台を築いた論文です。
+              </p>
+            </div>
+          </div>
+
+          <div class="paper-item">
+            <div class="paper-year">2006</div>
+            <div class="paper-content">
+              <h3>Hintonらのディープビリーフネット論文</h3>
+              <p>
+                Hinton, Osindero, Teh (2006) の論文「A fast learning algorithm
+                for deep belief
+                nets」では、<strong>ディープビリーフネット(DBN)</strong>を用いた層別の事前学習により深層ネットワークを効果的に訓練する手法が示されました。従来は困難だった多層構造の学習を可能にしたこの論文は、ディープラーニング復興の起点となり、第3次AIブームを牽引しました。要点として、各層を順に無教師学習で訓練し、その後微調整する戦略によって局所解や勾配消失の問題を緩和できることが示されています。
+              </p>
+            </div>
+          </div>
+
+          <div class="paper-item">
+            <div class="paper-year">2012</div>
+            <div class="paper-content">
+              <h3>AlexNetの論文</h3>
+              <p>
+                Krizhevsky, Sutskever, Hinton (2012) の論文「ImageNet
+                Classification with Deep Convolutional Neural
+                Networks」は、大規模CNN（AlexNet）を用いてImageNetデータセットの画像分類で飛躍的な精度向上を達成した報告です。AlexNetはILSVRC2012でトップ5エラー15.3%と当時の最先端を大きく上回る結果を出し、深層学習の有用性を実証しました。論文の要点は、GPUを活用した並列計算による高速学習、ReLU関数の採用による学習の効率化、ドロップアウトによる汎化性能向上など、後のディープラーニング手法にも受け継がれる実践上の工夫を盛り込んだ点にあります。またこの成果によりディープラーニングが一躍注目を浴び、他分野への応用も加速しました。
+              </p>
+            </div>
+          </div>
+
+          <div class="paper-item">
+            <div class="paper-year">2014</div>
+            <div class="paper-content">
+              <h3>GANの論文</h3>
+              <p>
+                Goodfellow et al. (2014) の論文「Generative Adversarial
+                Networks」は、ニューラルネット同士を競合させる敵対的生成学習という新しいパラダイムを提示しました。この論文では一方のネットワーク（生成器）がデータを生成し、もう一方（識別器）がそれを本物か偽物か判定するミニマックスゲームによって、生成器が徐々に本物そっくりのデータを作り出す仕組みを解説しています。提案されたGAN手法は、高解像度画像の生成やデータ拡張など様々な応用で追試・発展され、生成モデル分野の定番となりました。LeCunによる「ここ10年で最も面白いアイデア」との評価が示すように、機械学習コミュニティに与えたインパクトも非常に大きい論文です。
+              </p>
+            </div>
+          </div>
+
+          <div class="paper-item">
+            <div class="paper-year">2017</div>
+            <div class="paper-content">
+              <h3>Transformerの論文</h3>
+              <p>
+                Vaswani et al. (2017) の論文「Attention Is All You
+                Need」は、自己注意機構に基づくTransformerアーキテクチャを提案し、長年続いたRNN主体のNLP手法を刷新しました。この論文の主な貢献は、Attention機構のみで構築したモデルが機械翻訳タスクで従来手法を凌駕し得ることを示した点です。RNNやCNNを使わず並列計算可能なTransformerは、学習を高速化し大規模モデルへのスケールを容易にしました。論文では位置エンコーディングやマルチヘッドアテンションといった工夫も導入されており、以降のBERTやGPTなど数多くのモデルに応用されています。「Attention
+                Is All You
+                Need」は引用数が短期間で爆発的に増加し、現代のAI研究におけるマイルストーンとなった論文です。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="conclusion-section">
+        <h2><i class="fas fa-flag-checkered"></i> 結論</h2>
+        <p>
+          以上、ディープラーニングの技術的優位性を歴史的な視点から振り返り、過去の手法との比較と共に解説しました。ルールベースから統計的機械学習、そして深層学習へと至るAIの発展の流れの中で、ディープラーニングは特徴表現の自動学習とスケーラビリティによってブレイクスルーを生み出し、豊富なデータと高性能計算資源を糧に飛躍的な成果を上げています。その結果、画像認識や音声認識、自然言語処理といった幅広い領域で人間に匹敵するかそれ以上の性能を発揮するに至っており、今後もAIの中核技術として発展が期待されています。
+        </p>
+
+        <div class="references">
+          <h3>参考文献（一部）:</h3>
+          <ul>
+            <li>
+              Rumelhart et al., Learning representations by back-propagating
+              errors, Nature, 1986.
+            </li>
+            <li>
+              Hinton et al., A fast learning algorithm for deep belief nets,
+              Neural Computation, 2006.
+            </li>
+            <li>
+              Krizhevsky et al., ImageNet Classification with Deep Convolutional
+              Neural Networks, NIPS 2012.
+            </li>
+            <li>
+              Goodfellow et al., Generative Adversarial Networks, NIPS 2014.
+            </li>
+            <li>Vaswani et al., Attention Is All You Need, NIPS 2017.</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 ディープラーニング技術解説</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
