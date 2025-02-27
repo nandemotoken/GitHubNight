@@ -1,0 +1,151 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 1s ease;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #9c88ff;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 1.3rem;
+  color: #9c88ff;
+  margin-bottom: 1rem;
+}
+
+.sound-selector,
+.timer-section,
+.volume-control {
+  margin-bottom: 2rem;
+}
+
+.sound-buttons,
+.timer-controls {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.sound-btn,
+.timer-btn {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sound-btn:hover,
+.timer-btn:hover {
+  background-color: #3d3d3d;
+}
+
+.sound-btn.active,
+.timer-btn.active {
+  background-color: #9c88ff;
+  color: #121212;
+}
+
+.timer-display {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.volume-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.volume-control label {
+  margin-bottom: 0.5rem;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin: 0.5rem 0;
+  -webkit-appearance: none;
+  background: #2d2d2d;
+  height: 8px;
+  border-radius: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #9c88ff;
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* アニメーション用のクラス */
+.rain-bg {
+  background-color: #1a2639;
+}
+
+.waves-bg {
+  background-color: #1a3c5a;
+}
+
+.forest-bg {
+  background-color: #1a3a2a;
+}
+
+.whitenoise-bg {
+  background-color: #2a2a2a;
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    padding: 1.5rem;
+    border-radius: 0;
+    height: 100vh;
+    max-width: 100%;
+  }
+
+  .sound-buttons,
+  .timer-controls {
+    grid-template-columns: 1fr;
+  }
+}

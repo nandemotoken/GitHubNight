@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>おやすみアプリ</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <header>
+        <h1>おやすみアプリ</h1>
+      </header>
+
+      <main>
+        <div class="sound-selector">
+          <h2>リラックスサウンド</h2>
+          <div class="sound-buttons">
+            <button class="sound-btn" data-sound="rain">雨音</button>
+            <button class="sound-btn" data-sound="waves">波の音</button>
+            <button class="sound-btn" data-sound="forest">森の音</button>
+            <button class="sound-btn" data-sound="whitenoise">
+              ホワイトノイズ
+            </button>
+          </div>
+        </div>
+
+        <div class="timer-section">
+          <h2>スリープタイマー</h2>
+          <div class="timer-controls">
+            <button class="timer-btn" data-time="10">10分</button>
+            <button class="timer-btn" data-time="30">30分</button>
+            <button class="timer-btn" data-time="60">1時間</button>
+            <button class="timer-btn" data-time="0">無制限</button>
+          </div>
+          <div class="timer-display">
+            <span id="timer-remaining">00:00</span>
+          </div>
+        </div>
+
+        <div class="volume-control">
+          <label for="volume">音量</label>
+          <input type="range" id="volume" min="0" max="100" value="50" />
+        </div>
+      </main>
+
+      <footer>
+        <p>おやすみなさい 💤</p>
+      </footer>
+    </div>
+
+    <script src="src/app.js"></script>
+  </body>
+</html>
