@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美術館めぐりシステム 2.0</title>
+    <style>
+        :root {
+            --primary-color: #4a6da7;
+            --secondary-color: #f5f5f5;
+            --accent-color: #e63946;
+            --text-color: #333;
+            --light-gray: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+        
+        .visits-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3a5a8f;
+        }
+        
+        .btn-delete {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-delete:hover {
+            background-color: #c1272d;
+        }
+        
+        .btn-edit {
+            background-color: #4caf50;
+        }
+        
+        .btn-edit:hover {
+            background-color: #3e8e41;
+        }
+        
+        .museum-card {
+            background-color: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .museum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .museum-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .museum-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .museum-rating {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .museum-notes {
+            margin-bottom: 15px;
+            white-space: pre-line;
+        }
+        
+        .museum-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .museum-actions button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .star-rating {
+            color: gold;
+            font-size: 1.2rem;
+        }
+        
+        .no-visits {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filters select, .filters input {
+            max-width: 200px;
+        }
+        
+        /* 日本地図のスタイル */
+        .japan-map {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .japan-map path {
+            fill: #ddd;
+            stroke: #fff;
+            stroke-width: 1px;
+            transition: fill 0.3s;
+            cursor: pointer;
+        }
+        
+        .japan-map path:hover {
+            fill: #4a6da7;
+        }
+        
+        .japan-map text {
+            font-size: 8px;
+            fill: #333;
+            pointer-events: none;
+        }
+        
+        .prefecture-info {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .prefecture-info h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .prefecture-museums {
+            margin-top: 10px;
+        }
+        
+        .prefecture-museum-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .prefecture-museum-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .prefecture-museum-item .museum-name {
+            font-weight: bold;
+        }
+        
+        .prefecture-museum-item .exhibition-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .datalist-container {
+            position: relative;
+        }
+        
+        .museum-suggestions {
+            position: absolute;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            z-index: 10;
+            display: none;
+        }
+        
+        .suggestion-item {
+            padding: 8px 10px;
+            cursor: pointer;
+        }
+        
+        .suggestion-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .form-container, .visits-container, .map-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>美術館めぐりシステム 2.0</h1>
+        <p>あなたの美術館体験を記録しましょう</p>
+    </header>
+    
+    <div class="container">
+        <div class="form-container">
+            <h2>新しい美術館訪問を追加</h2>
+            <form id="museum-form">
+                <div class="datalist-container">
+                    <label for="museum-name">美術館名 *</label>
+                    <input type="text" id="museum-name" required autocomplete="off">
+                    <div class="museum-suggestions" id="museum-suggestions"></div>
+                </div>
+                
+                <div>
+                    <label for="visit-date">訪問日 *</label>
+                    <input type="date" id="visit-date" required>
+                </div>
+                
+                <div>
+                    <label for="exhibition">展示名</label>
+                    <input type="text" id="exhibition">
+                </div>
+                
+                <div>
+                    <label for="rating">評価</label>
+                    <select id="rating">
+                        <option value="5">★★★★★ (5/5)</option>
+                        <option value="4">★★★★☆ (4/5)</option>
+                        <option value="3" selected>★★★☆☆ (3/5)</option>
+                        <option value="2">★★☆☆☆ (2/5)</option>
+                        <option value="1">★☆☆☆☆ (1/5)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="notes">メモ</label>
+                    <textarea id="notes" placeholder="印象に残った作品や感想を書きましょう..."></textarea>
+                </div>
+                
+                <button type="submit" id="submit-btn">保存する</button>
+                <button type="button" id="cancel-btn" style="display: none; background-color: #999;">キャンセル</button>
+            </form>
+        </div>
+        
+        <div class="map-container">
+            <h2>日本地図から探す</h2>
+            <svg class="japan-map" viewBox="0 0 600 500" id="japan-map">
+                <!-- 北海道 -->
+                <path id="hokkaido" d="M488,90 L500,70 L520,60 L530,70 L520,90 L530,100 L520,110 L500,120 L490,110 L480,120 L470,110 L460,120 L450,110 L440,120 L430,110 L420,120 L410,110 L400,120 L390,110 L380,120 L370,110 L380,100 L390,90 L400,80 L410,70 L420,60 L430,50 L440,40 L450,30 L460,20 L470,30 L480,40 L490,50 L500,60 L488,90 Z" data-name="北海道"></path>
+                <!-- 東北 -->
+                <path id="aomori" d="M380,140 L390,130 L400,140 L410,130 L420,140 L410,150 L400,160 L390,150 L380,140 Z" data-name="青森県"></path>
+                <path id="akita" d="M380,170 L390,160 L400,170 L390,180 L380,170 Z" data-name="秋田県"></path>
+                <path id="iwate" d="M410,160 L420,150 L430,160 L420,170 L410,160 Z" data-name="岩手県"></path>
+                <path id="yamagata" d="M380,190 L390,180 L400,190 L390,200 L380,190 Z" data-name="山形県"></path>
+                <path id="miyagi" d="M410,180 L420,170 L430,180 L420,190 L410,180 Z" data-name="宮城県"></path>
+                <path id="fukushima" d="M390,210 L400,200 L410,210 L400,220 L390,210 Z" data-name="福島県"></path>
+                <!-- 関東 -->
+                <path id="ibaraki" d="M410,230 L420,220 L430,230 L420,240 L410,230 Z" data-name="茨城県"></path>
+                <path id="tochigi" d="M390,220 L400,210 L410,220 L400,230 L390,220 Z" data-name="栃木県"></path>
+                <path id="gunma" d="M370,220 L380,210 L390,220 L380,230 L370,220 Z" data-name="群馬県"></path>
+                <path id="saitama" d="M380,240 L390,230 L400,240 L390,250 L380,240 Z" data-name="埼玉県"></path>
+                <path id="chiba" d="M420,250 L430,240 L440,250 L430,260 L420,250 Z" data-name="千葉県"></path>
+                <path id="tokyo" d="M400,250 L410,240 L420,250 L410,260 L400,250 Z" data-name="東京都"></path>
+                <path id="kanagawa" d="M390,260 L400,250 L410,260 L400,270 L390,260 Z" data-name="神奈川県"></path>
+                <!-- 中部 -->
+                <path id="niigata" d="M360,200 L370,190 L380,200 L370,210 L360,200 Z" data-name="新潟県"></path>
+                <path id="toyama" d="M340,210 L350,200 L360,210 L350,220 L340,210 Z" data-name="富山県"></path>
+                <path id="ishikawa" d="M320,210 L330,200 L340,210 L330,220 L320,210 Z" data-name="石川県"></path>
+                <path id="fukui" d="M310,230 L320,220 L330,230 L320,240 L310,230 Z" data-name="福井県"></path>
+                <path id="yamanashi" d="M370,240 L380,230 L390,240 L380,250 L370,240 Z" data-name="山梨県"></path>
+                <path id="nagano" d="M350,230 L360,220 L370,230 L360,240 L350,230 Z" data-name="長野県"></path>
+                <path id="gifu" d="M330,240 L340,230 L350,240 L340,250 L330,240 Z" data-name="岐阜県"></path>
+                <path id="shizuoka" d="M370,260 L380,250 L390,260 L380,270 L370,260 Z" data-name="静岡県"></path>
+                <path id="aichi" d="M350,250 L360,240 L370,250 L360,260 L350,250 Z" data-name="愛知県"></path>
+                <!-- 近畿 -->
+                <path id="mie" d="M330,260 L340,250 L350,260 L340,270 L330,260 Z" data-name="三重県"></path>
+                <path id="shiga" d="M310,250 L320,240 L330,250 L320,260 L310,250 Z" data-name="滋賀県"></path>
+                <path id="kyoto" d="M290,250 L300,240 L310,250 L300,260 L290,250 Z" data-name="京都府"></path>
+                <path id="osaka" d="M300,270 L310,260 L320,270 L310,280 L300,270 Z" data-name="大阪府"></path>
+                <path id="hyogo" d="M280,260 L290,250 L300,260 L290,270 L280,260 Z" data-name="兵庫県"></path>
+                <path id="nara" d="M320,270 L330,260 L340,270 L330,280 L320,270 Z" data-name="奈良県"></path>
+                <path id="wakayama" d="M310,290 L320,280 L330,290 L320,300 L310,290 Z" data-name="和歌山県"></path>
+                <!-- 中国 -->
+                <path id="tottori" d="M260,250 L270,240 L280,250 L270,260 L260,250 Z" data-name="鳥取県"></path>
+                <path id="shimane" d="M230,260 L240,250 L250,260 L240,270 L230,260 Z" data-name="島根県"></path>
+                <path id="okayama" d="M260,270 L270,260 L280,270 L270,280 L260,270 Z" data-name="岡山県"></path>
+                <path id="hiroshima" d="M230,280 L240,270 L250,280 L240,290 L230,280 Z" data-name="広島県"></path>
+                <path id="yamaguchi" d="M200,280 L210,270 L220,280 L210,290 L200,280 Z" data-name="山口県"></path>
+                <!-- 四国 -->
+                <path id="tokushima" d="M280,300 L290,290 L300,300 L290,310 L280,300 Z" data-name="徳島県"></path>
+                <path id="kagawa" d="M260,290 L270,280 L280,290 L270,300 L260,290 Z" data-name="香川県"></path>
+                <path id="ehime" d="M230,300 L240,290 L250,300 L240,310 L230,300 Z" data-name="愛媛県"></path>
+                <path id="kochi" d="M250,320 L260,310 L270,320 L260,330 L250,320 Z" data-name="高知県"></path>
+                <!-- 九州 -->
+                <path id="fukuoka" d="M180,290 L190,280 L200,290 L190,300 L180,290 Z" data-name="福岡県"></path>
+                <path id="saga" d="M160,290 L170,280 L180,290 L170,300 L160,290 Z" data-name="佐賀県"></path>
+                <path id="nagasaki" d="M140,300 L150,290 L160,300 L150,310 L140,300 Z" data-name="長崎県"></path>
+                <path id="kumamoto" d="M170,310 L180,300 L190,310 L180,320 L170,310 Z" data-name="熊本県"></path>
+                <path id="oita" d="M200,300 L210,290 L220,300 L210,310 L200,300 Z" data-name="大分県"></path>
+                <path id="miyazaki" d="M190,330 L200,320 L210,330 L200,340 L190,330 Z" data-name="宮崎県"></path>
+                <path id="kagoshima" d="M170,340 L180,330 L190,340 L180,350 L170,340 Z" data-name="鹿児島県"></path>
+                <!-- 沖縄 -->
+                <path id="okinawa" d="M100,400 L110,390 L120,400 L110,410 L100,400 Z" data-name="沖縄県"></path>
+                
+                <!-- 都道府県名のラベル -->
+                <text x="490" y="80">北海道</text>
+                <text x="395" y="145">青森</text>
+                <text x="385" y="175">秋田</text>
+                <text x="415" y="165">岩手</text>
+                <text x="385" y="195">山形</text>
+                <text x="415" y="185">宮城</text>
+                <text x="395" y="215">福島</text>
+                <text x="415" y="235">茨城</text>
+                <text x="395" y="225">栃木</text>
+                <text x="375" y="225">群馬</text>
+                <text x="385" y="245">埼玉</text>
+                <text x="425" y="255">千葉</text>
+                <text x="405" y="255">東京</text>
+                <text x="395" y="265">神奈川</text>
+                <text x="365" y="205">新潟</text>
+                <text x="345" y="215">富山</text>
+                <text x="325" y="215">石川</text>
+                <text x="315" y="235">福井</text>
+                <text x="375" y="245">山梨</text>
+                <text x="355" y="235">長野</text>
+                <text x="335" y="245">岐阜</text>
+                <text x="375" y="265">静岡</text>
+                <text x="355" y="255">愛知</text>
+                <text x="335" y="265">三重</text>
+                <text x="315" y="255">滋賀</text>
+                <text x="295" y="255">京都</text>
+                <text x="305" y="275">大阪</text>
+                <text x="285" y="265">兵庫</text>
+                <text x="325" y="275">奈良</text>
+                <text x="315" y="295">和歌山</text>
+                <text x="265" y="255">鳥取</text>
+                <text x="235" y="265">島根</text>
+                <text x="265" y="275">岡山</text>
+                <text x="235" y="285">広島</text>
+                <text x="205" y="285">山口</text>
+                <text x="285" y="305">徳島</text>
+                <text x="265" y="295">香川</text>
+                <text x="235" y="305">愛媛</text>
+                <text x="255" y="325">高知</text>
+                <text x="185" y="295">福岡</text>
+                <text x="165" y="295">佐賀</text>
+                <text x="145" y="305">長崎</text>
+                <text x="175" y="315">熊本</text>
+                <text x="205" y="305">大分</text>
+                <text x="195" y="335">宮崎</text>
+                <text x="175" y="345">鹿児島</text>
+                <text x="110" y="405">沖縄</text>
+            </svg>
+            
+            <div class="prefecture-info" id="prefecture-info">
+                <h3 id="prefecture-name">都道府県名</h3>
+                <div class="prefecture-museums" id="prefecture-museums">
+                    <!-- 都道府県ごとの美術館リストがここに表示されます -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="visits-container">
+            <h2>美術館訪問履歴</h2>
+            
+            <div class="filters">
+                <label for="sort-by">並び替え:</label>
+                <select id="sort-by">
+                    <option value="date-desc">訪問日 (新しい順)</option>
+                    <option value="date-asc">訪問日 (古い順)</option>
+                    <option value="rating-desc">評価 (高い順)</option>
+                    <option value="rating-asc">評価 (低い順)</option>
+                    <option value="name-asc">美術館名 (A-Z)</option>
+                </select>
+                
+                <label for="search">検索:</label>
+                <input type="text" id="search" placeholder="美術館名や展示名で検索...">
+            </div>
+            
+            <div id="museum-list">
+                <!-- 美術館訪問記録がここに表示されます -->
+                <div class="no-visits">まだ訪問記録がありません。新しい訪問を追加してください。</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM要素の取得
+        const museumForm = document.getElementById('museum-form');
+        const museumNameInput = document.getElementById('museum-name');
+        const visitDateInput = document.getElementById('visit-date');
+        const exhibitionInput = document.getElementById('exhibition');
+        const ratingSelect = document.getElementById('rating');
+        const notesTextarea = document.getElementById('notes');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const museumList = document.getElementById('museum-list');
+        const sortBySelect = document.getElementById('sort-by');
+        const searchInput = document.getElementById('search');
+        const japanMap = document.getElementById('japan-map');
+        const prefectureInfo = document.getElementById('prefecture-info');
+        const prefectureName = document.getElementById('prefecture-name');
+        const prefectureMuseums = document.getElementById('prefecture-museums');
+        const museumSuggestions = document.getElementById('museum-suggestions');
+        
+        // 現在の日付をデフォルト値として設定
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        visitDateInput.value = formattedDate;
+        
+        // データの保存と取得
+        let museums = JSON.parse(localStorage.getItem('museums')) || [];
+        let editingIndex = -1;
+        
+        // 実在の美術館データ
+        const realMuseums = {
+            "北海道": [
+                { name: "北海道立近代美術館", location: "札幌市", exhibition: "北海道の風景画展" },
+                { name: "札幌芸術の森美術館", location: "札幌市", exhibition: "現代アート2025" }
+            ],
+            "青森県": [
+                { name: "青森県立美術館", location: "青森市", exhibition: "奈良美智展" },
+                { name: "十和田市現代美術館", location: "十和田市", exhibition: "建築と美術の対話" }
+            ],
+            "東京都": [
+                { name: "東京国立博物館", location: "台東区", exhibition: "特別展「国宝の名品」" },
+                { name: "国立新美術館", location: "港区", exhibition: "現代アート展2025" },
+                { name: "東京都現代美術館", location: "江東区", exhibition: "日本の写真家展" },
+                { name: "森美術館", location: "港区", exhibition: "未来都市と建築" },
+                { name: "上野の森美術館", location: "台東区", exhibition: "日本の伝統工芸展" }
+            ],
+            "京都府": [
+                { name: "京都国立博物館", location: "京都市", exhibition: "京都の仏像展" },
+                { name: "京都国立近代美術館", location: "京都市", exhibition: "日本画の巨匠たち" }
+            ],
+            "大阪府": [
+                { name: "国立国際美術館", location: "大阪市", exhibition: "世界の現代美術" },
+                { name: "大阪市立美術館", location: "大阪市", exhibition: "浮世絵名品展" }
+            ],
+            "福岡県": [
+                { name: "福岡市美術館", location: "福岡市", exhibition: "九州の美術家たち" },
+                { name: "九州国立博物館", location: "太宰府市", exhibition: "アジアの文化交流" }
+            ],
+            "沖縄県": [
+                { name: "沖縄県立博物館・美術館", location: "那覇市", exhibition: "琉球王国の美術" }
+            ]
+        };
+        
+        // 全美術館のフラットなリスト
+        const allMuseums = [];
+        for (const prefecture in realMuseums) {
+            realMuseums[prefecture].forEach(museum => {
+                allMuseums.push({
+                    name: museum.name,
+                    prefecture: prefecture,
+                    location: museum.location,
+                    exhibition: museum.exhibition
+                });
+            });
+        }
+        
+        // 美術館名の入力時にサジェスト表示
+        museumNameInput.addEventListener('input', function() {
+            const input = this.value.toLowerCase();
+            if (input.length < 2) {
+                museumSuggestions.style.display = 'none';
+                return;
+            }
+            
+            const matches = allMuseums.filter(museum => 
+                museum.name.toLowerCase().includes(input)
+            );
+            
+            if (matches.length > 0) {
+                museumSuggestions.innerHTML = '';
+                matches.forEach(museum => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.textContent = `${museum.name} (${museum.prefecture})`;
+                    div.addEventListener('click', () => {
+                        museumNameInput.value = museum.name;
+                        exhibitionInput.value = museum.exhibition || '';
+                        museumSuggestions.style.display = 'none';
+                    });
+                    museumSuggestions.appendChild(div);
+                });
+                museumSuggestions.style.display = 'block';
+            } else {
+                museumSuggestions.style.display = 'none';
+            }
+        });
+        
+        // クリック以外の場所をクリックしたらサジェストを非表示
+        document.addEventListener('click', function(e) {
+            if (!museumNameInput.contains(e.target) && !museumSuggestions.contains(e.target)) {
+                museumSuggestions.style.display = 'none';
+            }
+        });
+        
+        // 日本地図の都道府県をクリックしたときの処理
+        function setupMapInteraction() {
+            console.log('Setting up map interaction...');
+            
+            // デモボタンを追加するコンテナ
+            const demoButtonsContainer = document.createElement('div');
+            demoButtonsContainer.style.marginBottom = '20px';
+            demoButtonsContainer.style.display = 'flex';
+            demoButtonsContainer.style.flexDirection = 'column';
+            demoButtonsContainer.style.gap = '10px';
+            
+            // 美術館データがある都道府県のデモボタンを追加
+            const prefecturesWithMuseums = Object.keys(realMuseums);
+            
+            prefecturesWithMuseums.forEach(prefName => {
+                const demoButton = document.createElement('button');
+                demoButton.textContent = `${prefName}の美術館を表示（${realMuseums[prefName].length}館）`;
+                demoButton.style.padding = '10px';
+                
+                demoButton.addEventListener('click', function() {
+                    showPrefectureMuseums(prefName);
+                });
+                
+                demoButtonsContainer.appendChild(demoButton);
+            });
+            
+            // 地図の前に挿入
+            japanMap.parentNode.insertBefore(demoButtonsContainer, japanMap);
+            
+            // 各都道府県のパスにイベントリスナーを設定
+            const paths = japanMap.querySelectorAll('path');
+            console.log(`Found ${paths.length} prefecture paths`);
+            
+            paths.forEach(path => {
+                // 明示的にスタイルを設定
+                path.setAttribute('fill', '#ddd');
+                path.setAttribute('stroke', '#fff');
+                path.setAttribute('stroke-width', '1px');
+                path.style.cursor = 'pointer';
+                
+                // クリックイベントを設定
+                path.onclick = function(e) {
+                    const prefName = this.getAttribute('data-name');
+                    console.log(`Clicked on prefecture: ${prefName}`);
+                    showPrefectureMuseums(prefName);
+                    e.stopPropagation();
+                };
+                
+                // ホバー効果
+                path.onmouseover = function() {
+                    this.setAttribute('fill', '#4a6da7');
+                };
+                
+                path.onmouseout = function() {
+                    this.setAttribute('fill', '#ddd');
+                };
+            });
+            
+            // テキストラベルにもクリックイベントを追加
+            const texts = japanMap.querySelectorAll('text');
+            texts.forEach(text => {
+                const x = parseFloat(text.getAttribute('x'));
+                const y = parseFloat(text.getAttribute('y'));
+                const prefName = text.textContent;
+                
+                text.style.cursor = 'pointer';
+                text.onclick = function(e) {
+                    console.log(`Clicked on text label: ${prefName}`);
+                    // 対応する都道府県を探す
+                    for (const pref in realMuseums) {
+                        if (pref.includes(prefName) || prefName.includes(pref.replace('県', '').replace('都', '').replace('府', '').replace('道', ''))) {
+                            showPrefectureMuseums(pref);
+                            break;
+                        }
+                    }
+                    e.stopPropagation();
+                };
+            });
+        }
+        
+        // 都道府県の美術館情報を表示する関数
+        function showPrefectureMuseums(prefName) {
+            console.log(`Showing museums for: ${prefName}`);
+            prefectureName.textContent = prefName;
+            
+            // 都道府県の美術館リストを表示
+            prefectureMuseums.innerHTML = '';
+            
+            if (realMuseums[prefName]) {
+                console.log(`Found ${realMuseums[prefName].length} museums in ${prefName}`);
+                realMuseums[prefName].forEach(museum => {
+                    const div = document.createElement('div');
+                    div.className = 'prefecture-museum-item';
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'museum-name';
+                    nameDiv.textContent = museum.name;
+                    
+                    const locationDiv = document.createElement('div');
+                    locationDiv.textContent = `場所: ${museum.location}`;
+                    
+                    const exhibitionDiv = document.createElement('div');
+                    exhibitionDiv.className = 'exhibition-info';
+                    exhibitionDiv.textContent = museum.exhibition ?
+                        `現在の展示: ${museum.exhibition}` :
+                        '現在の展示情報はありません';
+                    
+                    div.appendChild(nameDiv);
+                    div.appendChild(locationDiv);
+                    div.appendChild(exhibitionDiv);
+                    
+                    // 美術館をクリックしたら入力フォームに情報を設定
+                    div.addEventListener('click', () => {
+                        museumNameInput.value = museum.name;
+                        exhibitionInput.value = museum.exhibition || '';
+                        // フォームにスクロール
+                        document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+                    });
+                    
+                    prefectureMuseums.appendChild(div);
+                });
+            } else {
+                console.log(`No museums found for ${prefName}`);
+                const div = document.createElement('div');
+                div.textContent = 'この都道府県の美術館情報はまだ登録されていません。';
+                prefectureMuseums.appendChild(div);
+            }
+            
+            prefectureInfo.style.display = 'block';
+            
+            // スクロールして情報を表示
+            prefectureInfo.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 地図のインタラクションをセットアップ
+        setupMapInteraction();
+        
+        // 美術館訪問リストの表示
+        function renderMuseumList() {
+            // フィルタリングと並び替えの適用
+            let filteredMuseums = [...museums];
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm) {
+                filteredMuseums = filteredMuseums.filter(museum => 
+                    museum.name.toLowerCase().includes(searchTerm) || 
+                    (museum.exhibition && museum.exhibition.toLowerCase().includes(searchTerm)) ||
+                    (museum.notes && museum.notes.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // 並び替え
+            const sortBy = sortBySelect.value;
+            filteredMuseums.sort((a, b) => {
+                switch (sortBy) {
+                    case 'date-desc':
+                        return new Date(b.date) - new Date(a.date);
+                    case 'date-asc':
+                        return new Date(a.date) - new Date(b.date);
+                    case 'rating-desc':
+                        return b.rating - a.rating;
+                    case 'rating-asc':
+                        return a.rating - b.rating;
+                    case 'name-asc':
+                        return a.name.localeCompare(b.name);
+                    default:
+                        return new Date(b.date) - new Date(a.date);
+                }
+            });
+            
+            // リストの表示
+            if (filteredMuseums.length === 0) {
+                museumList.innerHTML = '<div class="no-visits">条件に一致する訪問記録がありません。</div>';
+                return;
+            }
+            
+            museumList.innerHTML = '';
+            filteredMuseums.forEach((museum, index) => {
+                const originalIndex = museums.findIndex(m => 
+                    m.id === museum.id
+                );
+                
+                const card = document.createElement('div');
+                card.className = 'museum-card';
+                
+                // 日付のフォーマット
+                const visitDate = new Date(museum.date);
+                const formattedDate = visitDate.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+                
+                // 星評価の表示
+                const stars = '★'.repeat(museum.rating) + '☆'.repeat(5 - museum.rating);
+                
+                card.innerHTML = `
+                    <div class="museum-header">
+                        <div class="museum-title">${museum.name}</div>
+                        <div class="museum-date">${formattedDate}</div>
+                    </div>
+                    ${museum.exhibition ? `<div><strong>展示:</strong> ${museum.exhibition}</div>` : ''}
+                    <div class="museum-rating">
+                        <span class="star-rating">${stars}</span> (${museum.rating}/5)
+                    </div>
+                    ${museum.notes ? `<div class="museum-notes">${museum.notes}</div>` : ''}
+                    <div class="museum-actions">
+                        <button class="btn-edit" data-index="${originalIndex}">編集</button>
+                        <button class="btn-delete" data-index="${originalIndex}">削除</button>
+                    </div>
+                `;
+                
+                museumList.appendChild(card);
+            });
+            
+            // 編集ボタンのイベントリスナー
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    editMuseum(index);
+                });
+            });
+            
+            // 削除ボタンのイベントリスナー
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    deleteMuseum(index);
+                });
+            });
+        }
+        
+        // 美術館訪問の追加
+        function addMuseum(e) {
+            e.preventDefault();
+            
+            const museum = {
+                id: editingIndex >= 0 ? museums[editingIndex].id : Date.now(),
+                name: museumNameInput.value,
+                date: visitDateInput.value,
+                exhibition: exhibitionInput.value,
+                rating: parseInt(ratingSelect.value),
+                notes: notesTextarea.value
+            };
+            
+            if (editingIndex >= 0) {
+                // 編集モード
+                museums[editingIndex] = museum;
+                editingIndex = -1;
+                submitBtn.textContent = '保存する';
+                cancelBtn.style.display = 'none';
+            } else {
+                // 新規追加モード
+                museums.push(museum);
+            }
+            
+            // ローカルストレージに保存
+            localStorage.setItem('museums', JSON.stringify(museums));
+            
+            // フォームをリセット
+            museumForm.reset();
+            visitDateInput.value = formattedDate;
+            
+            // リストを更新
+            renderMuseumList();
+        }
+        
+        // 美術館訪問の編集
+        function editMuseum(index) {
+            const museum = museums[index];
+            
+            museumNameInput.value = museum.name;
+            visitDateInput.value = museum.date;
+            exhibitionInput.value = museum.exhibition || '';
+            ratingSelect.value = museum.rating;
+            notesTextarea.value = museum.notes || '';
+            
+            editingIndex = index;
+            submitBtn.textContent = '更新する';
+            cancelBtn.style.display = 'inline-block';
+            
+            // フォームにスクロール
+            document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 美術館訪問の削除
+        function deleteMuseum(index) {
+            if (confirm('この訪問記録を削除してもよろしいですか？')) {
+                museums.splice(index, 1);
+                localStorage.setItem('museums', JSON.stringify(museums));
+                renderMuseumList();
+                
+                // 編集中だった場合はキャンセル
+                if (editingIndex === index) {
+                    cancelEdit();
+                }
+            }
+        }
+        
+        // 編集のキャンセル
+        function cancelEdit() {
+            editingIndex = -1;
+            museumForm.reset();
+            visitDateInput.value = formattedDate;
+            submitBtn.textContent = '保存する';
+            cancelBtn.style.display = 'none';
+        }
+        
+        // イベントリスナーの設定
+        museumForm.addEventListener('submit', addMuseum);
+        cancelBtn.addEventListener('click', cancelEdit);
+        sortBySelect.addEventListener('change', renderMuseumList);
+        searchInput.addEventListener('input', renderMuseumList);
+        
+        // 初期表示
+        renderMuseumList();
+    </script>
+</body>
+</html>

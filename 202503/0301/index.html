@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美術館めぐりシステム</title>
+    <style>
+        :root {
+            --primary-color: #4a6da7;
+            --secondary-color: #f5f5f5;
+            --accent-color: #e63946;
+            --text-color: #333;
+            --light-gray: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .form-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .visits-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3a5a8f;
+        }
+        
+        .btn-delete {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-delete:hover {
+            background-color: #c1272d;
+        }
+        
+        .btn-edit {
+            background-color: #4caf50;
+        }
+        
+        .btn-edit:hover {
+            background-color: #3e8e41;
+        }
+        
+        .museum-card {
+            background-color: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .museum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .museum-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .museum-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .museum-rating {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .museum-notes {
+            margin-bottom: 15px;
+            white-space: pre-line;
+        }
+        
+        .museum-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .museum-actions button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .star-rating {
+            color: gold;
+            font-size: 1.2rem;
+        }
+        
+        .no-visits {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filters select, .filters input {
+            max-width: 200px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .form-container, .visits-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>美術館めぐりシステム</h1>
+        <p>あなたの美術館体験を記録しましょう</p>
+    </header>
+    
+    <div class="container">
+        <div class="form-container">
+            <h2>新しい美術館訪問を追加</h2>
+            <form id="museum-form">
+                <div>
+                    <label for="museum-name">美術館名 *</label>
+                    <input type="text" id="museum-name" required>
+                </div>
+                
+                <div>
+                    <label for="visit-date">訪問日 *</label>
+                    <input type="date" id="visit-date" required>
+                </div>
+                
+                <div>
+                    <label for="exhibition">展示名</label>
+                    <input type="text" id="exhibition">
+                </div>
+                
+                <div>
+                    <label for="rating">評価</label>
+                    <select id="rating">
+                        <option value="5">★★★★★ (5/5)</option>
+                        <option value="4">★★★★☆ (4/5)</option>
+                        <option value="3" selected>★★★☆☆ (3/5)</option>
+                        <option value="2">★★☆☆☆ (2/5)</option>
+                        <option value="1">★☆☆☆☆ (1/5)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="notes">メモ</label>
+                    <textarea id="notes" placeholder="印象に残った作品や感想を書きましょう..."></textarea>
+                </div>
+                
+                <button type="submit" id="submit-btn">保存する</button>
+                <button type="button" id="cancel-btn" style="display: none; background-color: #999;">キャンセル</button>
+            </form>
+        </div>
+        
+        <div class="visits-container">
+            <h2>美術館訪問履歴</h2>
+            
+            <div class="filters">
+                <label for="sort-by">並び替え:</label>
+                <select id="sort-by">
+                    <option value="date-desc">訪問日 (新しい順)</option>
+                    <option value="date-asc">訪問日 (古い順)</option>
+                    <option value="rating-desc">評価 (高い順)</option>
+                    <option value="rating-asc">評価 (低い順)</option>
+                    <option value="name-asc">美術館名 (A-Z)</option>
+                </select>
+                
+                <label for="search">検索:</label>
+                <input type="text" id="search" placeholder="美術館名や展示名で検索...">
+            </div>
+            
+            <div id="museum-list">
+                <!-- 美術館訪問記録がここに表示されます -->
+                <div class="no-visits">まだ訪問記録がありません。新しい訪問を追加してください。</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM要素の取得
+        const museumForm = document.getElementById('museum-form');
+        const museumNameInput = document.getElementById('museum-name');
+        const visitDateInput = document.getElementById('visit-date');
+        const exhibitionInput = document.getElementById('exhibition');
+        const ratingSelect = document.getElementById('rating');
+        const notesTextarea = document.getElementById('notes');
+        const submitBtn = document.getElementById('submit-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const museumList = document.getElementById('museum-list');
+        const sortBySelect = document.getElementById('sort-by');
+        const searchInput = document.getElementById('search');
+        
+        // 現在の日付をデフォルト値として設定
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        visitDateInput.value = formattedDate;
+        
+        // データの保存と取得
+        let museums = JSON.parse(localStorage.getItem('museums')) || [];
+        let editingIndex = -1;
+        
+        // 美術館訪問リストの表示
+        function renderMuseumList() {
+            // フィルタリングと並び替えの適用
+            let filteredMuseums = [...museums];
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            if (searchTerm) {
+                filteredMuseums = filteredMuseums.filter(museum => 
+                    museum.name.toLowerCase().includes(searchTerm) || 
+                    (museum.exhibition && museum.exhibition.toLowerCase().includes(searchTerm)) ||
+                    (museum.notes && museum.notes.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // 並び替え
+            const sortBy = sortBySelect.value;
+            filteredMuseums.sort((a, b) => {
+                switch (sortBy) {
+                    case 'date-desc':
+                        return new Date(b.date) - new Date(a.date);
+                    case 'date-asc':
+                        return new Date(a.date) - new Date(b.date);
+                    case 'rating-desc':
+                        return b.rating - a.rating;
+                    case 'rating-asc':
+                        return a.rating - b.rating;
+                    case 'name-asc':
+                        return a.name.localeCompare(b.name);
+                    default:
+                        return new Date(b.date) - new Date(a.date);
+                }
+            });
+            
+            // リストの表示
+            if (filteredMuseums.length === 0) {
+                museumList.innerHTML = '<div class="no-visits">条件に一致する訪問記録がありません。</div>';
+                return;
+            }
+            
+            museumList.innerHTML = '';
+            filteredMuseums.forEach((museum, index) => {
+                const originalIndex = museums.findIndex(m => 
+                    m.id === museum.id
+                );
+                
+                const card = document.createElement('div');
+                card.className = 'museum-card';
+                
+                // 日付のフォーマット
+                const visitDate = new Date(museum.date);
+                const formattedDate = visitDate.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+                
+                // 星評価の表示
+                const stars = '★'.repeat(museum.rating) + '☆'.repeat(5 - museum.rating);
+                
+                card.innerHTML = `
+                    <div class="museum-header">
+                        <div class="museum-title">${museum.name}</div>
+                        <div class="museum-date">${formattedDate}</div>
+                    </div>
+                    ${museum.exhibition ? `<div><strong>展示:</strong> ${museum.exhibition}</div>` : ''}
+                    <div class="museum-rating">
+                        <span class="star-rating">${stars}</span> (${museum.rating}/5)
+                    </div>
+                    ${museum.notes ? `<div class="museum-notes">${museum.notes}</div>` : ''}
+                    <div class="museum-actions">
+                        <button class="btn-edit" data-index="${originalIndex}">編集</button>
+                        <button class="btn-delete" data-index="${originalIndex}">削除</button>
+                    </div>
+                `;
+                
+                museumList.appendChild(card);
+            });
+            
+            // 編集ボタンのイベントリスナー
+            document.querySelectorAll('.btn-edit').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    editMuseum(index);
+                });
+            });
+            
+            // 削除ボタンのイベントリスナー
+            document.querySelectorAll('.btn-delete').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    deleteMuseum(index);
+                });
+            });
+        }
+        
+        // 美術館訪問の追加
+        function addMuseum(e) {
+            e.preventDefault();
+            
+            const museum = {
+                id: editingIndex >= 0 ? museums[editingIndex].id : Date.now(),
+                name: museumNameInput.value,
+                date: visitDateInput.value,
+                exhibition: exhibitionInput.value,
+                rating: parseInt(ratingSelect.value),
+                notes: notesTextarea.value
+            };
+            
+            if (editingIndex >= 0) {
+                // 編集モード
+                museums[editingIndex] = museum;
+                editingIndex = -1;
+                submitBtn.textContent = '保存する';
+                cancelBtn.style.display = 'none';
+            } else {
+                // 新規追加モード
+                museums.push(museum);
+            }
+            
+            // ローカルストレージに保存
+            localStorage.setItem('museums', JSON.stringify(museums));
+            
+            // フォームをリセット
+            museumForm.reset();
+            visitDateInput.value = formattedDate;
+            
+            // リストを更新
+            renderMuseumList();
+        }
+        
+        // 美術館訪問の編集
+        function editMuseum(index) {
+            const museum = museums[index];
+            
+            museumNameInput.value = museum.name;
+            visitDateInput.value = museum.date;
+            exhibitionInput.value = museum.exhibition || '';
+            ratingSelect.value = museum.rating;
+            notesTextarea.value = museum.notes || '';
+            
+            editingIndex = index;
+            submitBtn.textContent = '更新する';
+            cancelBtn.style.display = 'inline-block';
+            
+            // フォームにスクロール
+            document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 美術館訪問の削除
+        function deleteMuseum(index) {
+            if (confirm('この訪問記録を削除してもよろしいですか？')) {
+                museums.splice(index, 1);
+                localStorage.setItem('museums', JSON.stringify(museums));
+                renderMuseumList();
+                
+                // 編集中だった場合はキャンセル
+                if (editingIndex === index) {
+                    cancelEdit();
+                }
+            }
+        }
+        
+        // 編集のキャンセル
+        function cancelEdit() {
+            editingIndex = -1;
+            museumForm.reset();
+            visitDateInput.value = formattedDate;
+            submitBtn.textContent = '保存する';
+            cancelBtn.style.display = 'none';
+        }
+        
+        // イベントリスナーの設定
+        museumForm.addEventListener('submit', addMuseum);
+        cancelBtn.addEventListener('click', cancelEdit);
+        sortBySelect.addEventListener('change', renderMuseumList);
+        searchInput.addEventListener('input', renderMuseumList);
+        
+        // 初期表示
+        renderMuseumList();
+    </script>
+</body>
+</html>
