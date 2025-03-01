@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>語学留学費用シミュレーター</title>
+    <style>
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #f5f5f5;
+            --accent-color: #ff006e;
+            --text-color: #333;
+            --light-gray: #ddd;
+            --success-color: #38b000;
+            --warning-color: #ffbe0b;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .results-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2a75e6;
+        }
+        
+        .destination-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .destination-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .destination-info {
+            padding: 15px;
+        }
+        
+        .destination-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .destination-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .destination-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .cost-breakdown {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .country-flag {
+            width: 30px;
+            height: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #c62828;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .price-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>語学留学費用シミュレーター</h1>
+        <p>1ヶ月の語学留学にかかる費用をシミュレーション</p>
+    </header>
+    
+    <div class="container">
+        <div class="search-container">
+            <h2>留学条件</h2>
+            <form id="search-form">
+                <div>
+                    <label for="language">学習言語</label>
+                    <select id="language">
+                        <option value="english" selected>英語</option>
+                        <option value="chinese">中国語</option>
+                        <option value="korean">韓国語</option>
+                        <option value="french">フランス語</option>
+                        <option value="german">ドイツ語</option>
+                        <option value="spanish">スペイン語</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="accommodation">宿泊タイプ</label>
+                    <select id="accommodation">
+                        <option value="homestay" selected>ホームステイ</option>
+                        <option value="dormitory">学生寮</option>
+                        <option value="share">シェアハウス</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="course-intensity">コース強度</label>
+                    <select id="course-intensity">
+                        <option value="standard" selected>スタンダード (週15-20時間)</option>
+                        <option value="intensive">インテンシブ (週25-30時間)</option>
+                        <option value="super-intensive">スーパーインテンシブ (週35時間以上)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="start-month">開始月</label>
+                    <select id="start-month">
+                        <option value="1">1月</option>
+                        <option value="2">2月</option>
+                        <option value="3" selected>3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="11">11月</option>
+                        <option value="12">12月</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="search-btn">費用を計算する</button>
+            </form>
+        </div>
+        
+        <div class="results-container">
+            <h2>留学プラン一覧</h2>
+            <div id="loading-message" class="loading" style="display: none;">データを計算中...</div>
+            <div id="error-message" class="error" style="display: none;"></div>
+            
+            <div id="price-grid" class="price-grid">
+                <!-- 留学プラン情報がここに表示されます -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM要素の取得
+        const searchForm = document.getElementById('search-form');
+        const languageSelect = document.getElementById('language');
+        const accommodationSelect = document.getElementById('accommodation');
+        const courseIntensitySelect = document.getElementById('course-intensity');
+        const startMonthSelect = document.getElementById('start-month');
+        const priceGrid = document.getElementById('price-grid');
+        const loadingMessage = document.getElementById('loading-message');
+        const errorMessage = document.getElementById('error-message');
+
+        // 語学学校データ
+        const languageSchools = {
+            english: [
+                {
+                    country: 'アメリカ',
+                    city: 'ニューヨーク',
+                    flag: '🇺🇸',
+                    image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                    baseTuition: 280000,
+                    baseAccommodation: {
+                        homestay: 180000,
+                        dormitory: 200000,
+                        share: 160000
+                    },
+                    livingCost: 150000,
+                    features: ['TOEFL対策コース有り', 'インターンシップ機会有り', 'マンハッタン中心部'],
+                    weather: '夏は暑く、冬は寒い',
+                    bestTime: '9月-11月'
+                },
+                {
+                    country: 'イギリス',
+                    city: 'ロンドン',
+                    flag: '🇬🇧',
+                    image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                    baseTuition: 260000,
+                    baseAccommodation: {
+                        homestay: 170000,
+                        dormitory: 190000,
+                        share: 150000
+                    },
+                    livingCost: 140000,
+                    features: ['IELTS対策コース有り', '歴史的な校舎', '多国籍な環境'],
+                    weather: '年間を通じて温暖',
+                    bestTime: '6月-8月'
+                },
+                {
+                    country: 'オーストラリア',
+                    city: 'シドニー',
+                    flag: '🇦🇺',
+                    image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                    baseTuition: 240000,
+                    baseAccommodation: {
+                        homestay: 160000,
+                        dormitory: 180000,
+                        share: 140000
+                    },
+                    livingCost: 130000,
+                    features: ['ビーチに近い', 'アクティビティ豊富', 'ワーホリ準備コース有り'],
+                    weather: '12月-2月は夏',
+                    bestTime: '3月-5月'
+                }
+            ],
+            chinese: [
+                {
+                    country: '中国',
+                    city: '北京',
+                    flag: '🇨🇳',
+                    image: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                    baseTuition: 200000,
+                    baseAccommodation: {
+                        homestay: 140000,
+                        dormitory: 120000,
+                        share: 100000
+                    },
+                    livingCost: 100000,
+                    features: ['HSK対策コース有り', '文化体験プログラム', '1対1レッスン有り'],
+                    weather: '夏は暑く、冬は寒い',
+                    bestTime: '9月-11月'
+                }
+            ],
+            korean: [
+                {
+                    country: '韓国',
+                    city: 'ソウル',
+                    flag: '🇰🇷',
+                    image: 'https://images.unsplash.com/photo-1538485399081-7c9fd8953889?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80',
+                    baseTuition: 220000,
+                    baseAccommodation: {
+                        homestay: 150000,
+                        dormitory: 130000,
+                        share: 110000
+                    },
+                    livingCost: 110000,
+                    features: ['TOPIK対策コース有り', 'K-POP文化体験', '放課後活動充実'],
+                    weather: '春と秋が過ごしやすい',
+                    bestTime: '3月-5月'
+                }
+            ],
+            french: [
+                {
+                    country: 'フランス',
+                    city: 'パリ',
+                    flag: '🇫🇷',
+                    image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1173&q=80',
+                    baseTuition: 250000,
+                    baseAccommodation: {
+                        homestay: 170000,
+                        dormitory: 190000,
+                        share: 150000
+                    },
+                    livingCost: 140000,
+                    features: ['DELF/DALF対策', '文化芸術プログラム', 'ワイン講座'],
+                    weather: '春と秋が快適',
+                    bestTime: '4月-6月'
+                }
+            ],
+            german: [
+                {
+                    country: 'ドイツ',
+                    city: 'ベルリン',
+                    flag: '🇩🇪',
+                    image: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                    baseTuition: 230000,
+                    baseAccommodation: {
+                        homestay: 160000,
+                        dormitory: 180000,
+                        share: 140000
+                    },
+                    livingCost: 120000,
+                    features: ['TestDaF対策', '現代アート体験', 'ビジネスドイツ語'],
+                    weather: '夏は温暖で過ごしやすい',
+                    bestTime: '5月-9月'
+                }
+            ],
+            spanish: [
+                {
+                    country: 'スペイン',
+                    city: 'バルセロナ',
+                    flag: '🇪🇸',
+                    image: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                    baseTuition: 220000,
+                    baseAccommodation: {
+                        homestay: 150000,
+                        dormitory: 170000,
+                        share: 130000
+                    },
+                    livingCost: 110000,
+                    features: ['DELE対策コース', 'フラメンコ教室', '地中海料理教室'],
+                    weather: '地中海性気候で温暖',
+                    bestTime: '4月-6月'
+                }
+            ]
+        };
+
+        // 費用を計算する関数
+        function calculateCosts(language, accommodation, courseIntensity, startMonth) {
+            return new Promise((resolve, reject) => {
+                loadingMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+
+                setTimeout(() => {
+                    try {
+                        const schools = languageSchools[language].map(school => {
+                            // 基本授業料の調整（コース強度による）
+                            let tuition = school.baseTuition;
+                            if (courseIntensity === 'intensive') {
+                                tuition *= 1.2;
+                            } else if (courseIntensity === 'super-intensive') {
+                                tuition *= 1.4;
+                            }
+
+                            // 宿泊費
+                            const accommodationCost = school.baseAccommodation[accommodation];
+
+                            // 時期による調整（ハイシーズンは割増）
+                            let seasonalMultiplier = 1;
+                            if (startMonth >= 6 && startMonth <= 8) { // 夏季
+                                seasonalMultiplier = 1.2;
+                            } else if (startMonth === 12 || startMonth === 1) { // 年末年始
+                                seasonalMultiplier = 1.15;
+                            }
+
+                            const totalCost = Math.round((tuition + accommodationCost + school.livingCost) * seasonalMultiplier);
+
+                            return {
+                                ...school,
+                                tuition: Math.round(tuition),
+                                accommodationCost,
+                                livingCost: school.livingCost,
+                                totalCost
+                            };
+                        });
+
+                        // 総費用の安い順にソート
+                        schools.sort((a, b) => a.totalCost - b.totalCost);
+                        resolve(schools);
+                    } catch (error) {
+                        reject(error);
+                    } finally {
+                        loadingMessage.style.display = 'none';
+                    }
+                }, 1000);
+            });
+        }
+
+        // 費用カードを生成する関数
+        function createCostCards(schools) {
+            priceGrid.innerHTML = '';
+            
+            schools.forEach(school => {
+                const card = document.createElement('div');
+                card.className = 'destination-card';
+                
+                const formattedTotalCost = new Intl.NumberFormat('ja-JP', {
+                    style: 'currency',
+                    currency: 'JPY',
+                    maximumFractionDigits: 0
+                }).format(school.totalCost);
+
+                const formattedTuition = new Intl.NumberFormat('ja-JP', {
+                    style: 'currency',
+                    currency: 'JPY',
+                    maximumFractionDigits: 0
+                }).format(school.tuition);
+
+                const formattedAccommodation = new Intl.NumberFormat('ja-JP', {
+                    style: 'currency',
+                    currency: 'JPY',
+                    maximumFractionDigits: 0
+                }).format(school.accommodationCost);
+
+                const formattedLiving = new Intl.NumberFormat('ja-JP', {
+                    style: 'currency',
+                    currency: 'JPY',
+                    maximumFractionDigits: 0
+                }).format(school.livingCost);
+                
+                card.innerHTML = `
+                    <div class="destination-image" style="background-image: url('${school.image}')"></div>
+                    <div class="destination-info">
+                        <div class="destination-name">
+                            <span class="country-flag">${school.flag}</span> ${school.country} (${school.city})
+                        </div>
+                        <div class="destination-price">${formattedTotalCost}</div>
+                        <div class="cost-breakdown">
+                            <div class="cost-item">
+                                <span>授業料:</span>
+                                <span>${formattedTuition}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>宿泊費:</span>
+                                <span>${formattedAccommodation}</span>
+                            </div>
+                            <div class="cost-item">
+                                <span>生活費:</span>
+                                <span>${formattedLiving}</span>
+                            </div>
+                        </div>
+                        <div class="destination-details">
+                            <strong>特徴:</strong>
+                        </div>
+                        <ul style="margin-left: 20px; margin-bottom: 10px;">
+                            ${school.features.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                        <div class="destination-details">
+                            <span>気候: ${school.weather}</span>
+                        </div>
+                        <div class="destination-details">
+                            <span>おすすめ時期: ${school.bestTime}</span>
+                        </div>
+                    </div>
+                `;
+                
+                priceGrid.appendChild(card);
+            });
+        }
+
+        // 検索フォームの送信イベント
+        searchForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const language = languageSelect.value;
+            const accommodation = accommodationSelect.value;
+            const courseIntensity = courseIntensitySelect.value;
+            const startMonth = parseInt(startMonthSelect.value);
+            
+            try {
+                const schools = await calculateCosts(language, accommodation, courseIntensity, startMonth);
+                createCostCards(schools);
+            } catch (error) {
+                console.error('Error calculating costs:', error);
+                errorMessage.textContent = '費用の計算中にエラーが発生しました。もう一度お試しください。';
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        // 初期データの読み込み
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const schools = await calculateCosts('english', 'homestay', 'standard', 3);
+                createCostCards(schools);
+            } catch (error) {
+                console.error('Error calculating initial costs:', error);
+                errorMessage.textContent = '費用の計算中にエラーが発生しました。もう一度お試しください。';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

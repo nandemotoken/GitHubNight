@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>近隣国への航空運賃</title>
+    <style>
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #f5f5f5;
+            --accent-color: #ff006e;
+            --text-color: #333;
+            --light-gray: #ddd;
+            --success-color: #38b000;
+            --warning-color: #ffbe0b;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+        }
+        
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .results-container {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2a75e6;
+        }
+        
+        .price-card {
+            background-color: white;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .country-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .flight-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .flight-info {
+            flex: 1;
+        }
+        
+        .flight-duration {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        
+        .airline {
+            color: #666;
+        }
+        
+        .price-comparison {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--light-gray);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .price-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .price-trend.up {
+            color: var(--accent-color);
+        }
+        
+        .price-trend.down {
+            color: var(--success-color);
+        }
+        
+        .price-trend.stable {
+            color: var(--warning-color);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+        
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid #c62828;
+        }
+        
+        .api-usage {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .country-flag {
+            width: 30px;
+            height: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+            border: 1px solid #eee;
+        }
+        
+        .price-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .destination-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .destination-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .destination-info {
+            padding: 15px;
+        }
+        
+        .destination-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .destination-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+        
+        .destination-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .best-time {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--success-color);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .price-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>近隣国への航空運賃</h1>
+        <p>日本から近隣のアジア諸国への最新の航空運賃情報</p>
+    </header>
+    
+    <div class="container">
+        <div class="search-container">
+            <h2>検索条件</h2>
+            <form id="search-form">
+                <div>
+                    <label for="departure-city">出発地</label>
+                    <select id="departure-city">
+                        <option value="TYO" selected>東京 (羽田/成田)</option>
+                        <option value="OSA">大阪 (関西/伊丹)</option>
+                        <option value="NGO">名古屋 (中部)</option>
+                        <option value="FUK">福岡</option>
+                        <option value="CTS">札幌 (新千歳)</option>
+                        <option value="OKA">沖縄 (那覇)</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="travel-month">旅行月</label>
+                    <select id="travel-month">
+                        <option value="1">1月</option>
+                        <option value="2">2月</option>
+                        <option value="3" selected>3月</option>
+                        <option value="4">4月</option>
+                        <option value="5">5月</option>
+                        <option value="6">6月</option>
+                        <option value="7">7月</option>
+                        <option value="8">8月</option>
+                        <option value="9">9月</option>
+                        <option value="10">10月</option>
+                        <option value="11">11月</option>
+                        <option value="12">12月</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="trip-duration">滞在期間</label>
+                    <select id="trip-duration">
+                        <option value="3">3日間</option>
+                        <option value="5" selected>5日間</option>
+                        <option value="7">7日間</option>
+                        <option value="10">10日間</option>
+                        <option value="14">14日間</option>
+                    </select>
+                </div>
+                
+                <button type="submit" id="search-btn">検索する</button>
+            </form>
+            
+            <div class="api-usage">
+                <p>API使用状況: <span id="api-usage-count">0</span> リクエスト</p>
+                <p>推定コスト: <span id="api-cost">$0.00</span></p>
+            </div>
+        </div>
+        
+        <div class="results-container">
+            <h2>近隣国への航空運賃</h2>
+            <div id="loading-message" class="loading" style="display: none;">データを取得中...</div>
+            <div id="error-message" class="error" style="display: none;"></div>
+            
+            <div id="price-grid" class="price-grid">
+                <!-- 航空運賃情報がここに表示されます -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // DOM要素の取得
+        const searchForm = document.getElementById('search-form');
+        const departureCitySelect = document.getElementById('departure-city');
+        const travelMonthSelect = document.getElementById('travel-month');
+        const tripDurationSelect = document.getElementById('trip-duration');
+        const searchBtn = document.getElementById('search-btn');
+        const priceGrid = document.getElementById('price-grid');
+        const loadingMessage = document.getElementById('loading-message');
+        const errorMessage = document.getElementById('error-message');
+        const apiUsageCount = document.getElementById('api-usage-count');
+        const apiCost = document.getElementById('api-cost');
+        
+        // API使用状況の追跡
+        let apiRequests = 0;
+        const costPerRequest = 0.01; // 1リクエストあたりの推定コスト（ドル）
+        
+        // 近隣国のデータ
+        const nearbyCountries = [
+            {
+                code: 'KOR',
+                name: '韓国',
+                city: 'ソウル',
+                airport: 'ICN',
+                flag: '🇰🇷',
+                image: 'https://images.unsplash.com/photo-1538485399081-7c9fd8953889?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80',
+                bestTime: '春（3-5月）と秋（9-11月）',
+                flightTime: '約2時間'
+            },
+            {
+                code: 'CHN',
+                name: '中国',
+                city: '上海',
+                airport: 'PVG',
+                flag: '🇨🇳',
+                image: 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                bestTime: '春（3-5月）と秋（9-11月）',
+                flightTime: '約3時間'
+            },
+            {
+                code: 'TWN',
+                name: '台湾',
+                city: '台北',
+                airport: 'TPE',
+                flag: '🇹🇼',
+                image: 'https://images.unsplash.com/photo-1470004914212-05527e49370b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80',
+                bestTime: '10月から4月',
+                flightTime: '約3時間'
+            },
+            {
+                code: 'HKG',
+                name: '香港',
+                city: '香港',
+                airport: 'HKG',
+                flag: '🇭🇰',
+                image: 'https://images.unsplash.com/photo-1506970845246-18f21d533b20?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                bestTime: '10月から12月',
+                flightTime: '約4時間'
+            },
+            {
+                code: 'PHL',
+                name: 'フィリピン',
+                city: 'マニラ',
+                airport: 'MNL',
+                flag: '🇵🇭',
+                image: 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80',
+                bestTime: '11月から2月',
+                flightTime: '約4時間30分'
+            },
+            {
+                code: 'VNM',
+                name: 'ベトナム',
+                city: 'ホーチミン',
+                airport: 'SGN',
+                flag: '🇻🇳',
+                image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80',
+                bestTime: '12月から4月',
+                flightTime: '約6時間'
+            },
+            {
+                code: 'THA',
+                name: 'タイ',
+                city: 'バンコク',
+                airport: 'BKK',
+                flag: '🇹🇭',
+                image: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1139&q=80',
+                bestTime: '11月から2月',
+                flightTime: '約6時間'
+            },
+            {
+                code: 'SGP',
+                name: 'シンガポール',
+                city: 'シンガポール',
+                airport: 'SIN',
+                flag: '🇸🇬',
+                image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1052&q=80',
+                bestTime: '年間を通して良好',
+                flightTime: '約7時間'
+            },
+            {
+                code: 'MYS',
+                name: 'マレーシア',
+                city: 'クアラルンプール',
+                airport: 'KUL',
+                flag: '🇲🇾',
+                image: 'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80',
+                bestTime: '5月から7月',
+                flightTime: '約7時間'
+            }
+        ];
+        
+        // 模擬的な航空運賃データを生成する関数
+        function generateFlightPrices(departureCity, month, duration) {
+            // API使用状況の更新
+            apiRequests++;
+            apiUsageCount.textContent = apiRequests;
+            apiCost.textContent = `$${(apiRequests * costPerRequest).toFixed(2)}`;
+            
+            // 実際のAPIを使用する場合はここでAPIリクエストを行う
+            // 今回は模擬データを生成
+            
+            return new Promise((resolve, reject) => {
+                // ローディング表示
+                loadingMessage.style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                // 模擬的な遅延（実際のAPIリクエストをシミュレート）
+                setTimeout(() => {
+                    try {
+                        const prices = nearbyCountries.map(country => {
+                            // 基本価格（実際のAPIからのデータを模擬）
+                            let basePrice = Math.floor(Math.random() * 30000) + 20000;
+                            
+                            // 出発地による価格調整
+                            if (departureCity === 'TYO') {
+                                // 東京からは基本価格
+                            } else if (departureCity === 'OSA' || departureCity === 'NGO') {
+                                basePrice += Math.floor(Math.random() * 5000);
+                            } else {
+                                basePrice += Math.floor(Math.random() * 10000);
+                            }
+                            
+                            // 月による価格調整（繁忙期は高め）
+                            if (month >= 7 && month <= 8) { // 夏休み
+                                basePrice += Math.floor(Math.random() * 15000) + 5000;
+                            } else if (month >= 12 || month <= 1) { // 年末年始
+                                basePrice += Math.floor(Math.random() * 20000) + 10000;
+                            } else if (month >= 3 && month <= 4) { // 春休み
+                                basePrice += Math.floor(Math.random() * 10000) + 3000;
+                            }
+                            
+                            // 滞在期間による調整
+                            const pricePerDay = basePrice / 5; // 5日間を基準
+                            basePrice = Math.floor(pricePerDay * duration);
+                            
+                            // 国ごとの調整（距離に応じた調整）
+                            if (country.code === 'KOR' || country.code === 'TWN') {
+                                basePrice = Math.floor(basePrice * 0.8); // 近い国は安め
+                            } else if (country.code === 'SGP' || country.code === 'MYS') {
+                                basePrice = Math.floor(basePrice * 1.2); // 遠い国は高め
+                            }
+                            
+                            // 価格トレンド（上昇、下降、安定）
+                            const trends = ['up', 'down', 'stable'];
+                            const trend = trends[Math.floor(Math.random() * trends.length)];
+                            
+                            // トレンドに応じたパーセンテージ
+                            let percentage = 0;
+                            if (trend === 'up') {
+                                percentage = Math.floor(Math.random() * 15) + 5;
+                            } else if (trend === 'down') {
+                                percentage = -1 * (Math.floor(Math.random() * 15) + 5);
+                            }
+                            
+                            return {
+                                ...country,
+                                price: basePrice,
+                                trend: trend,
+                                percentage: percentage,
+                                airline: getRandomAirline(country.code),
+                                departureDate: getRandomDate(month),
+                                returnDate: getReturnDate(getRandomDate(month), duration)
+                            };
+                        });
+                        
+                        // 価格の安い順にソート
+                        prices.sort((a, b) => a.price - b.price);
+                        
+                        resolve(prices);
+                    } catch (error) {
+                        reject(error);
+                    } finally {
+                        loadingMessage.style.display = 'none';
+                    }
+                }, 1500);
+            });
+        }
+        
+        // ランダムな航空会社を返す関数
+        function getRandomAirline(countryCode) {
+            const airlines = {
+                'KOR': ['大韓航空', 'アシアナ航空', '日本航空', '全日空'],
+                'CHN': ['中国東方航空', '中国国際航空', '日本航空', '全日空'],
+                'TWN': ['チャイナエアライン', 'エバー航空', '日本航空', 'スターフライヤー'],
+                'HKG': ['キャセイパシフィック', '香港エクスプレス', '日本航空', '全日空'],
+                'PHL': ['フィリピン航空', 'セブパシフィック', '日本航空', '全日空'],
+                'VNM': ['ベトナム航空', 'ベトジェットエア', '日本航空', '全日空'],
+                'THA': ['タイ国際航空', 'エアアジア', '日本航空', '全日空'],
+                'SGP': ['シンガポール航空', 'スクート', '日本航空', '全日空'],
+                'MYS': ['マレーシア航空', 'エアアジア', '日本航空', '全日空']
+            };
+            
+            const airlineList = airlines[countryCode] || ['日本航空', '全日空', 'ピーチ', 'ジェットスター'];
+            return airlineList[Math.floor(Math.random() * airlineList.length)];
+        }
+        
+        // 指定された月のランダムな日付を返す関数
+        function getRandomDate(month) {
+            const year = new Date().getFullYear();
+            const daysInMonth = new Date(year, month, 0).getDate();
+            const day = Math.floor(Math.random() * daysInMonth) + 1;
+            return new Date(year, month - 1, day);
+        }
+        
+        // 出発日から指定された日数後の日付を返す関数
+        function getReturnDate(departureDate, duration) {
+            const returnDate = new Date(departureDate);
+            returnDate.setDate(returnDate.getDate() + parseInt(duration));
+            return returnDate;
+        }
+        
+        // 日付をフォーマットする関数
+        function formatDate(date) {
+            return date.toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'short'
+            });
+        }
+        
+        // 価格カードを生成する関数
+        function createPriceCards(prices) {
+            priceGrid.innerHTML = '';
+            
+            prices.forEach(price => {
+                const card = document.createElement('div');
+                card.className = 'destination-card';
+                
+                const formattedPrice = new Intl.NumberFormat('ja-JP', {
+                    style: 'currency',
+                    currency: 'JPY',
+                    maximumFractionDigits: 0
+                }).format(price.price);
+                
+                let trendIcon = '';
+                let trendClass = '';
+                
+                if (price.trend === 'up') {
+                    trendIcon = '↑';
+                    trendClass = 'up';
+                } else if (price.trend === 'down') {
+                    trendIcon = '↓';
+                    trendClass = 'down';
+                } else {
+                    trendIcon = '→';
+                    trendClass = 'stable';
+                }
+                
+                card.innerHTML = `
+                    <div class="destination-image" style="background-image: url('${price.image}')"></div>
+                    <div class="destination-info">
+                        <div class="destination-name">
+                            <span class="country-flag">${price.flag}</span> ${price.name} (${price.city})
+                        </div>
+                        <div class="destination-price">${formattedPrice}</div>
+                        <div class="destination-details">
+                            <div>往路: ${formatDate(price.departureDate)}</div>
+                            <div>復路: ${formatDate(price.returnDate)}</div>
+                        </div>
+                        <div class="destination-details">
+                            <div>航空会社: ${price.airline}</div>
+                            <div>飛行時間: ${price.flightTime}</div>
+                        </div>
+                        <div class="price-trend ${trendClass}">
+                            価格傾向: ${trendIcon} ${Math.abs(price.percentage)}%
+                        </div>
+                        <div class="best-time">
+                            おすすめ時期: ${price.bestTime}
+                        </div>
+                    </div>
+                `;
+                
+                priceGrid.appendChild(card);
+            });
+        }
+        
+        // 検索フォームの送信イベント
+        searchForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const departureCity = departureCitySelect.value;
+            const travelMonth = parseInt(travelMonthSelect.value);
+            const tripDuration = parseInt(tripDurationSelect.value);
+            
+            try {
+                const prices = await generateFlightPrices(departureCity, travelMonth, tripDuration);
+                createPriceCards(prices);
+            } catch (error) {
+                console.error('Error fetching flight prices:', error);
+                errorMessage.textContent = 'データの取得中にエラーが発生しました。もう一度お試しください。';
+                errorMessage.style.display = 'block';
+            }
+        });
+        
+        // 初期データの読み込み
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const prices = await generateFlightPrices('TYO', 3, 5);
+                createPriceCards(prices);
+            } catch (error) {
+                console.error('Error fetching initial flight prices:', error);
+                errorMessage.textContent = 'データの取得中にエラーが発生しました。もう一度お試しください。';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
