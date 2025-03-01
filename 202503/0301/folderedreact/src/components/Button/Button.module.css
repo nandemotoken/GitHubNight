@@ -1,0 +1,59 @@
+.button {
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* サイズバリエーション */
+.small {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.medium {
+  padding: 12px 24px;
+  font-size: 16px;
+}
+
+.large {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+/* カラーバリエーション */
+.primary {
+  background-color: #0070f3;
+  color: white;
+}
+
+.secondary {
+  background-color: #666;
+  color: white;
+}
+
+.outline {
+  background-color: transparent;
+  border: 2px solid #0070f3;
+  color: #0070f3;
+}
+
+.loader {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
