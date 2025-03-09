@@ -1,14 +1,25 @@
 const fs = require('fs').promises;
 const path = require('path');
 
-async function createDailyFolder() {
-    const now = new Date();
+async function createDailyFolder(dateStr) {
+    let now;
+    
+    if (dateStr) {
+        // 引数が指定された場合（例：0305）
+        const currentYear = new Date().getFullYear();
+        const month = dateStr.slice(0, 2);
+        const day = dateStr.slice(2, 4);
+        now = new Date(currentYear, parseInt(month) - 1, parseInt(day));
+    } else {
+        // 引数がない場合は本日の日付
+        now = new Date();
+    }
     
     // YYYYMM/MMDD 形式のパスを生成
-    const yearMonth = now.toISOString().slice(0,4) + 
-                     now.toISOString().slice(5,7);
-    const day = now.toISOString().slice(5,7) + 
-                now.toISOString().slice(8,10);
+    const yearMonth = now.getFullYear().toString() + 
+                     String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getMonth() + 1).padStart(2, '0') + 
+                String(now.getDate()).padStart(2, '0');
     
     const folderPath = path.join(yearMonth, day);
 
@@ -46,4 +57,6 @@ async function createDailyFolder() {
     }
 }
 
-createDailyFolder(); 
+// コマンドライン引数を取得
+const dateArg = process.argv[2];
+createDailyFolder(dateArg); 
