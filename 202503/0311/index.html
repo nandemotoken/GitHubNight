@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>速読チャレンジ - 日本語・英語</title>
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        #display-area {
+            font-size: 2em;
+            margin: 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        #speed-display {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .effect-fade {
+            animation: fadeEffect 0.5s;
+        }
+
+        .effect-zoom {
+            animation: zoomEffect 0.5s;
+        }
+
+        .effect-slide {
+            animation: slideEffect 0.5s;
+        }
+
+        @keyframes fadeEffect {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes zoomEffect {
+            from { transform: scale(0.5); }
+            to { transform: scale(1); }
+        }
+
+        @keyframes slideEffect {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        .stats {
+            margin-top: 20px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .language-selector {
+            margin: 20px 0;
+        }
+
+        .language-selector button {
+            background: #2196F3;
+        }
+
+        .language-selector button.active {
+            background: #1976D2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>速読チャレンジ</h1>
+        <div class="language-selector">
+            <button onclick="switchLanguage('ja')" id="btn-ja" class="active">日本語</button>
+            <button onclick="switchLanguage('en')" id="btn-en">English</button>
+        </div>
+        <div id="display-area">ここに文章が表示されます</div>
+        <div class="controls">
+            <button onclick="startReading()">開始</button>
+            <button onclick="stopReading()">停止</button>
+            <button onclick="speedUp()">速く</button>
+            <button onclick="speedDown()">遅く</button>
+        </div>
+        <div id="speed-display">現在の速度: 300 WPM</div>
+        <div class="stats">
+            <div id="progress">進捗: 0%</div>
+            <div id="word-count">読んだ文字数: 0</div>
+        </div>
+    </div>
+
+    <script>
+        const texts = {
+            ja: `吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。掌の上で少し落ちついて書生の顔を見たのがいわゆる人間というものの見始であろう。この時妙なものだと思った感じが今でも残っている。第一毛をもって装飾されべきはずの顔がつるつるしてまるで薬缶だ。その後猫にもだいぶ逢ったがこんな片輪には一度も出会わした事がない。のみならず顔の真中があまりに突起している。そうしてその穴の中から時々ぷうぷうと煙を吹く。どうも咽せぽくて実に弱った。これが人間の飲む煙草というものである事はようやくこの頃知った。`,
+            en: `I have a dream that one day this nation will rise up and live out the true meaning of its creed. We hold these truths to be self-evident, that all men are created equal. I have a dream that one day on the red hills of Georgia, the sons of former slaves and the sons of former slave owners will be able to sit down together at the table of brotherhood. I have a dream that one day even the state of Mississippi, a state sweltering with the heat of injustice, sweltering with the heat of oppression, will be transformed into an oasis of freedom and justice. I have a dream that my four little children will one day live in a nation where they will not be judged by the color of their skin but by the content of their character.`
+        };
+
+        let currentIndex = 0;
+        let timer = null;
+        let speed = 300; // WPM
+        const effects = ['effect-fade', 'effect-zoom', 'effect-slide'];
+        let currentEffect = 0;
+        let currentLanguage = 'ja';
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            stopReading();
+            currentIndex = 0;
+            document.getElementById('display-area').textContent = lang === 'ja' ? 'ここに文章が表示されます' : 'Text will appear here';
+            document.getElementById('progress').textContent = '進捗: 0%';
+            document.getElementById('word-count').textContent = '読んだ文字数: 0';
+            
+            // ボタンのアクティブ状態を更新
+            document.getElementById('btn-ja').classList.toggle('active', lang === 'ja');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        }
+
+        function displayNextWord() {
+            const text = texts[currentLanguage];
+            if (currentIndex >= text.length) {
+                stopReading();
+                return;
+            }
+
+            const displayArea = document.getElementById('display-area');
+            let chunk = '';
+            let chunkEnd = currentIndex;
+
+            if (currentLanguage === 'ja') {
+                chunkEnd = currentIndex + 3;
+                if (text[currentIndex] === '。') {
+                    chunk = '。';
+                    chunkEnd = currentIndex + 1;
+                } else {
+                    chunk = text.slice(currentIndex, chunkEnd);
+                }
+            } else {
+                // 英語の場合は単語単位で区切る
+                let nextSpace = text.indexOf(' ', currentIndex);
+                if (nextSpace === -1) nextSpace = text.length;
+                chunk = text.slice(currentIndex, nextSpace);
+                chunkEnd = nextSpace + 1;
+            }
+
+            displayArea.className = effects[currentEffect];
+            displayArea.textContent = chunk;
+            
+            currentIndex = chunkEnd;
+            currentEffect = (currentEffect + 1) % effects.length;
+
+            // 進捗更新
+            const progress = Math.floor((currentIndex / text.length) * 100);
+            document.getElementById('progress').textContent = `進捗: ${progress}%`;
+            document.getElementById('word-count').textContent = `読んだ${currentLanguage === 'ja' ? '文字' : '単語'}数: ${currentLanguage === 'ja' ? currentIndex : chunk.trim() ? currentIndex.toString().split(' ').length : 0}`;
+        }
+
+        function startReading() {
+            if (timer) return;
+            if (currentIndex >= texts[currentLanguage].length) currentIndex = 0;
+            
+            const msPerWord = (60 * 1000) / speed;
+            timer = setInterval(displayNextWord, msPerWord);
+        }
+
+        function stopReading() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        function speedUp() {
+            speed += 50;
+            updateSpeed();
+        }
+
+        function speedDown() {
+            if (speed > 50) {
+                speed -= 50;
+                updateSpeed();
+            }
+        }
+
+        function updateSpeed() {
+            document.getElementById('speed-display').textContent = `現在の速度: ${speed} WPM`;
+            if (timer) {
+                stopReading();
+                startReading();
+            }
+        }
+    </script>
+</body>
+</html> 
