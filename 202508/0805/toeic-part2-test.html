@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC Part 2 模擬試験</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.2);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .start-screen p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .question-number {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .timer {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .audio-controls {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .audio-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+
+        .audio-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .options {
+            margin: 30px 0;
+        }
+
+        .option {
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .option-label {
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 30px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .results-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .score-display h2 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .score-display p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .review-container {
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .review-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .review-item.correct {
+            border-left-color: #28a745;
+        }
+
+        .review-item.incorrect {
+            border-left-color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>TOEIC Part 2 模擬試験</h1>
+            <p>50問の応答問題で英語力をテストしましょう</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 開始画面 -->
+            <div class="start-screen" id="startScreen">
+                <h2>TOEIC Part 2 応答問題</h2>
+                <p>
+                    この模擬試験では、50問の応答問題を解きます。<br>
+                    各問題で短い質問や文が読まれ、それに対する最適な応答を3つの選択肢から選んでください。<br>
+                    音声は各問題につき2回まで再生できます。<br><br>
+                    制限時間は約25分です。準備ができたら開始ボタンを押してください。
+                </p>
+                <button class="btn" onclick="startTest()">試験開始</button>
+            </div>
+
+            <!-- 問題画面 -->
+            <div class="question-container" id="questionContainer">
+                <div class="question-header">
+                    <div class="question-number" id="questionNumber">問題 1 / 50</div>
+                    <div class="timer" id="timer">25:00</div>
+                </div>
+
+                <div class="audio-controls">
+                    <p style="margin-bottom: 15px; color: #666;">音声を再生して問題を聞いてください</p>
+                    <button class="audio-btn" id="playBtn" onclick="playAudio()">🔊 音声再生</button>
+                    <button class="audio-btn" id="replayBtn" onclick="replayAudio()" disabled>🔄 もう一度</button>
+                    <div style="margin-top: 10px; color: #888; font-size: 0.9em;">
+                        <span id="playCount">再生回数: 0/2</span>
+                    </div>
+                </div>
+
+                <div class="options" id="optionsContainer">
+                    <div class="option" onclick="selectOption(0)">
+                        <span class="option-label">(A)</span>
+                        <span id="optionA">選択肢A</span>
+                    </div>
+                    <div class="option" onclick="selectOption(1)">
+                        <span class="option-label">(B)</span>
+                        <span id="optionB">選択肢B</span>
+                    </div>
+                    <div class="option" onclick="selectOption(2)">
+                        <span class="option-label">(C)</span>
+                        <span id="optionC">選択肢C</span>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button class="btn" id="prevBtn" onclick="previousQuestion()" disabled>← 前の問題</button>
+                    <button class="btn" id="nextBtn" onclick="nextQuestion()" disabled>次の問題 →</button>
+                    <button class="btn" id="finishBtn" onclick="finishTest()" style="display: none;">試験終了</button>
+                </div>
+            </div>
+
+            <!-- 結果画面 -->
+            <div class="results-screen" id="resultsScreen">
+                <h2 style="margin-bottom: 20px; color: #333;">試験結果</h2>
+                <div class="score-display">
+                    <h2 id="finalScore">0</h2>
+                    <p>50問中<span id="correctCount">0</span>問正解</p>
+                    <p>正答率: <span id="accuracy">0</span>%</p>
+                </div>
+                <div class="review-container" id="reviewContainer">
+                    <!-- レビュー項目がここに動的に追加される -->
+                </div>
+                <button class="btn" onclick="restartTest()">もう一度挑戦</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 問題データ
+        const questions = [
+            {
+                question: "Where is the nearest subway station?",
+                options: ["It's about two blocks away.", "I prefer taking the bus.", "The train is running late."],
+                correct: 0,
+                explanation: "場所を尋ねる質問には場所を答える選択肢が適切です。"
+            },
+            {
+                question: "Would you like some coffee?",
+                options: ["Yes, I'd love some.", "Coffee is expensive.", "The meeting is at 3 PM."],
+                correct: 0,
+                explanation: "提案に対しては受け入れるか断るかの返答が適切です。"
+            },
+            {
+                question: "How was your vacation?",
+                options: ["Next week is fine.", "It was wonderful, thank you.", "I'm going to Hawaii."],
+                correct: 1,
+                explanation: "過去の経験について尋ねられたら、その経験についての感想を答えます。"
+            },
+            {
+                question: "Who is giving the presentation today?",
+                options: ["The presentation is at 2 PM.", "Mr. Johnson from marketing.", "In the conference room."],
+                correct: 1,
+                explanation: "「誰が」と尋ねられたら人を答える必要があります。"
+            },
+            {
+                question: "Can you help me with this report?",
+                options: ["The report is due tomorrow.", "Of course, I'd be happy to help.", "Reports are important."],
+                correct: 1,
+                explanation: "手伝いを求められたら、承諾するか断るかの返答が適切です。"
+            },
+            {
+                question: "Why are you working late tonight?",
+                options: ["I have a deadline to meet.", "Tonight's weather is nice.", "Working is important."],
+                correct: 0,
+                explanation: "理由を尋ねる質問には理由を答える必要があります。"
+            },
+            {
+                question: "Did you receive my email yesterday?",
+                options: ["Email is convenient.", "Yes, I got it this morning.", "Yesterday was busy."],
+                correct: 1,
+                explanation: "Yes/No質問にはYesかNoで始まる答えが適切です。"
+            },
+            {
+                question: "What time does the store close?",
+                options: ["At 9 PM on weekdays.", "The store sells clothes.", "I like shopping there."],
+                correct: 0,
+                explanation: "時間を尋ねる質問には時間を答える必要があります。"
+            },
+            {
+                question: "Are you attending the conference next week?",
+                options: ["Conferences are educational.", "Yes, I've already registered.", "Next week is busy."],
+                correct: 1,
+                explanation: "参加するかどうかの質問にはYes/Noで始まる返答が適切です。"
+            },
+            {
+                question: "How long have you been working here?",
+                options: ["About three years now.", "I enjoy working here.", "The office is downtown."],
+                correct: 0,
+                explanation: "期間を尋ねる質問には期間を答える必要があります。"
+            },
+            {
+                question: "Would you mind if I opened the window?",
+                options: ["Windows are important.", "Not at all, go ahead.", "The weather is nice."],
+                correct: 1,
+                explanation: "許可を求める丁寧な表現には承諾か拒否の返答が適切です。"
+            },
+            {
+                question: "What's your favorite restaurant in town?",
+                options: ["I love Italian food.", "There's a great Italian place on Main Street.", "Restaurants are expensive."],
+                correct: 1,
+                explanation: "具体的な場所を尋ねられたら具体的な答えが適切です。"
+            },
+            {
+                question: "Have you finished the project yet?",
+                options: ["Projects are challenging.", "Almost, I just need one more day.", "I started yesterday."],
+                correct: 1,
+                explanation: "完了したかどうかの質問には進捗状況を答えます。"
+            },
+            {
+                question: "Could you pick me up at the airport?",
+                options: ["The airport is crowded.", "Sure, what time does your flight arrive?", "Flying is convenient."],
+                correct: 1,
+                explanation: "依頼に対しては承諾して詳細を確認するのが適切です。"
+            },
+            {
+                question: "When is the deadline for this assignment?",
+                options: ["Next Friday at 5 PM.", "Assignments are important.", "I'm working on it now."],
+                correct: 0,
+                explanation: "いつかを尋ねる質問には具体的な日時を答えます。"
+            },
+            {
+                question: "Do you know where Sarah went?",
+                options: ["Sarah is my colleague.", "She went to the client meeting.", "I don't know Sarah well."],
+                correct: 1,
+                explanation: "場所を尋ねる質問には場所や行動を答えます。"
+            },
+            {
+                question: "How much does this cost?",
+                options: ["It's $29.99.", "It's very popular.", "I bought it yesterday."],
+                correct: 0,
+                explanation: "価格を尋ねる質問には具体的な価格を答えます。"
+            },
+            {
+                question: "Are you free for lunch tomorrow?",
+                options: ["Lunch is important.", "I'm sorry, I have a meeting.", "Tomorrow is Wednesday."],
+                correct: 1,
+                explanation: "誘いに対しては承諾するか理由付きで断るかの返答が適切です。"
+            },
+            {
+                question: "Which floor is the accounting department on?",
+                options: ["On the fifth floor.", "Accounting is important.", "The elevator is broken."],
+                correct: 0,
+                explanation: "どの階かを尋ねる質問には階数を答えます。"
+            },
+            {
+                question: "Should we take the train or drive?",
+                options: ["Transportation is important.", "Let's take the train, it's faster.", "I have a car."],
+                correct: 1,
+                explanation: "選択肢を提示されたらどちらかを選んで理由を述べます。"
+            },
+            {
+                question: "Is the printer working properly?",
+                options: ["No, it's out of toner.", "Printers are useful.", "I need to print something."],
+                correct: 0,
+                explanation: "機械の状態を尋ねる質問には状態を答えます。"
+            },
+            {
+                question: "What did you think of the movie?",
+                options: ["Movies are entertaining.", "It was really exciting.", "I went last night."],
+                correct: 1,
+                explanation: "感想を求められたら具体的な感想を述べます。"
+            },
+            {
+                question: "Can I borrow your pen for a moment?",
+                options: ["Pens are useful.", "Of course, here you go.", "I have many pens."],
+                correct: 1,
+                explanation: "借用の依頼には承諾するか断るかの返答が適切です。"
+            },
+            {
+                question: "How often do you exercise?",
+                options: ["Exercise is healthy.", "About three times a week.", "I joined a gym."],
+                correct: 1,
+                explanation: "頻度を尋ねる質問には頻度を答えます。"
+            },
+            {
+                question: "Where did you buy that jacket?",
+                options: ["At the mall downtown.", "It was expensive.", "I like this color."],
+                correct: 0,
+                explanation: "どこで買ったかを尋ねる質問には場所を答えます。"
+            },
+            {
+                question: "Would you like to join our team for lunch?",
+                options: ["Teams are important.", "That sounds great, thank you.", "Lunch is at noon."],
+                correct: 1,
+                explanation: "誘いに対しては承諾するか断るかの返答が適切です。"
+            },
+            {
+                question: "How's the weather today?",
+                options: ["It's sunny and warm.", "Weather affects mood.", "I checked the forecast."],
+                correct: 0,
+                explanation: "天気について尋ねられたら現在の天気状況を答えます。"
+            },
+            {
+                question: "Do you have any plans for the weekend?",
+                options: ["Weekends are relaxing.", "Yes, I'm visiting my family.", "Plans are important."],
+                correct: 1,
+                explanation: "週末の予定を尋ねられたら具体的な予定を答えます。"
+            },
+            {
+                question: "Could you turn down the music, please?",
+                options: ["Music is enjoyable.", "Sure, no problem.", "I like this song."],
+                correct: 1,
+                explanation: "丁寧な依頼には承諾の返答が適切です。"
+            },
+            {
+                question: "What's your phone number?",
+                options: ["Phones are useful.", "It's 555-1234.", "I got a new phone."],
+                correct: 1,
+                explanation: "電話番号を尋ねられたら番号を答えます。"
+            },
+            {
+                question: "Are you enjoying your new job?",
+                options: ["Jobs are important.", "Yes, it's very challenging.", "I started last month."],
+                correct: 1,
+                explanation: "仕事についての感想を求められたら感想を述べます。"
+            },
+            {
+                question: "Which way is the library?",
+                options: ["Go straight and turn left.", "Libraries have many books.", "I need to return a book."],
+                correct: 0,
+                explanation: "道順を尋ねる質問には方向を答えます。"
+            },
+            {
+                question: "Have you seen Tom today?",
+                options: ["Tom is my friend.", "No, I haven't seen him.", "Today is busy."],
+                correct: 1,
+                explanation: "見たかどうかの質問にはYes/Noで始まる返答が適切です。"
+            },
+            {
+                question: "What time is your appointment?",
+                options: ["At 3:30 this afternoon.", "Appointments are important.", "I made it yesterday."],
+                correct: 0,
+                explanation: "時間を尋ねる質問には具体的な時間を答えます。"
+            },
+            {
+                question: "Do you mind if I sit here?",
+                options: ["Sitting is comfortable.", "Not at all, please do.", "The chair is empty."],
+                correct: 1,
+                explanation: "許可を求める質問には承諾か拒否の返答が適切です。"
+            },
+            {
+                question: "How was your flight?",
+                options: ["Flights can be tiring.", "It was delayed, but comfortable.", "I flew yesterday."],
+                correct: 1,
+                explanation: "フライトの感想を求められたら体験を答えます。"
+            },
+            {
+                question: "What's for dinner tonight?",
+                options: ["We're having pasta.", "Dinner is important.", "I'm hungry."],
+                correct: 0,
+                explanation: "何を食べるかを尋ねる質問には具体的な料理を答えます。"
+            },
+            {
+                question: "Are you coming to the party on Saturday?",
+                options: ["Parties are fun.", "I'd love to, but I can't make it.", "Saturday is weekend."],
+                correct: 1,
+                explanation: "参加するかどうかの質問には承諾するか断るかの返答が適切です。"
+            },
+            {
+                question: "How do you get to work?",
+                options: ["Work is important.", "I usually take the subway.", "I work downtown."],
+                correct: 1,
+                explanation: "通勤方法を尋ねる質問には交通手段を答えます。"
+            },
+            {
+                question: "Is this seat taken?",
+                options: ["Seats are comfortable.", "No, you can sit there.", "I'm sitting here."],
+                correct: 1,
+                explanation: "席が空いているかの質問にはYes/Noで始まる返答が適切です。"
+            },
+            {
+                question: "What's your favorite color?",
+                options: ["Colors are beautiful.", "I really like blue.", "I wear different colors."],
+                correct: 1,
+                explanation: "好みを尋ねる質問には具体的な好みを答えます。"
+            },
+            {
+                question: "Could you help me move this table?",
+                options: ["Tables are heavy.", "Sure, let me give you a hand.", "Moving is difficult."],
+                correct: 1,
+                explanation: "手伝いの依頼には承諾するか断るかの返答が適切です。"
+            },
+            {
+                question: "When will the report be ready?",
+                options: ["By the end of the week.", "Reports take time.", "I'm working on it."],
+                correct: 0,
+                explanation: "いつ完成するかを尋ねる質問には具体的な時期を答えます。"
+            },
+            {
+                question: "Do you speak Spanish?",
+                options: ["Spanish is useful.", "A little, but not fluently.", "I studied languages."],
+                correct: 1,
+                explanation: "言語能力について尋ねられたら能力レベルを答えます。"
+            },
+            {
+                question: "Where should we meet for lunch?",
+                options: ["How about that new café on 5th Street?", "Lunch meetings are common.", "I'm hungry now."],
+                correct: 0,
+                explanation: "待ち合わせ場所を尋ねる質問には具体的な場所を提案します。"
+            },
+            {
+                question: "Have you finished reading the book?",
+                options: ["Books are educational.", "Almost, just a few more chapters.", "I bought it last week."],
+                correct: 1,
+                explanation: "読み終わったかの質問には進捗状況を答えます。"
+            },
+            {
+                question: "What's the password for the Wi-Fi?",
+                options: ["Wi-Fi is convenient.", "It's 'office2024'.", "I use Wi-Fi daily."],
+                correct: 1,
+                explanation: "パスワードを尋ねる質問には具体的なパスワードを答えます。"
+            },
+            {
+                question: "Are you planning to attend the training session?",
+                options: ["Training is valuable.", "Yes, I think it will be helpful.", "Sessions are scheduled regularly."],
+                correct: 1,
+                explanation: "参加予定を尋ねる質問には参加するかどうかとその理由を答えます。"
+            },
+            {
+                question: "How long does it take to get there?",
+                options: ["About 30 minutes by car.", "Getting there is easy.", "I went there yesterday."],
+                correct: 0,
+                explanation: "所要時間を尋ねる質問には具体的な時間を答えます。"
+            },
+            {
+                question: "Would you prefer tea or coffee?",
+                options: ["Beverages are refreshing.", "Coffee, please.", "I drink both sometimes."],
+                correct: 1,
+                explanation: "選択肢を提示されたらどちらかを選んで答えます。"
+            },
+            {
+                question: "Is the meeting still scheduled for 2 PM?",
+                options: ["Meetings are important.", "Yes, but it's been moved to room 301.", "I have my calendar ready."],
+                correct: 1,
+                explanation: "スケジュール確認の質問には確認とともに変更があれば詳細を伝えます。"
+            }
+        ];
+
+        // グローバル変数
+        let currentQuestion = 0;
+        let selectedAnswers = new Array(50).fill(-1);
+        let timeRemaining = 25 * 60; // 25分
+        let timer;
+        let playCount = 0;
+        let currentAudio = null;
+
+        // 試験開始
+        function startTest() {
+            document.getElementById('startScreen').style.display = 'none';
+            document.getElementById('questionContainer').style.display = 'block';
+            startTimer();
+            showQuestion();
+        }
+
+        // タイマー開始
+        function startTimer() {
+            timer = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    finishTest();
+                }
+            }, 1000);
+        }
+
+        // タイマー表示更新
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // 問題表示
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('questionNumber').textContent = `問題 ${currentQuestion + 1} / 50`;
+            document.getElementById('optionA').textContent = question.options[0];
+            document.getElementById('optionB').textContent = question.options[1];
+            document.getElementById('optionC').textContent = question.options[2];
+            
+            // 進捗バー更新
+            const progress = ((currentQuestion + 1) / 50) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            
+            // 選択肢の状態をリセット
+            resetOptions();
+            
+            // 前回の選択を復元
+            if (selectedAnswers[currentQuestion] !== -1) {
+                selectOption(selectedAnswers[currentQuestion], false);
+            }
+            
+            // 音声再生回数をリセット
+            playCount = 0;
+            updatePlayCount();
+            
+            // ボタンの状態を更新
+            updateNavigationButtons();
+        }
+
+        // 選択肢の状態をリセット
+        function resetOptions() {
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+        }
+
+        // 選択肢選択
+        function selectOption(index, playSound = true) {
+            resetOptions();
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            selectedAnswers[currentQuestion] = index;
+            updateNavigationButtons();
+            
+            if (playSound) {
+                // 選択音を再生（実際の音声ファイルがある場合）
+                // playSelectionSound();
+            }
+        }
+
+        // 音声再生（模擬）
+        function playAudio() {
+            if (playCount >= 2) return;
+            
+            playCount++;
+            updatePlayCount();
+            
+            // 実際の実装では音声ファイルを再生
+            // ここでは Text-to-Speech API を使用してシミュレート
+            const question = questions[currentQuestion].question;
+            
+            if ('speechSynthesis' in window) {
+                // 既存の音声を停止
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(question);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                utterance.pitch = 1;
+                
+                utterance.onstart = () => {
+                    document.getElementById('playBtn').disabled = true;
+                    document.getElementById('replayBtn').disabled = true;
+                };
+                
+                utterance.onend = () => {
+                    document.getElementById('playBtn').disabled = false;
+                    if (playCount < 2) {
+                        document.getElementById('replayBtn').disabled = false;
+                    }
+                };
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('音声再生機能はサポートされていません。');
+            }
+        }
+
+        // 音声再生（再生）
+        function replayAudio() {
+            playAudio();
+        }
+
+        // 再生回数表示更新
+        function updatePlayCount() {
+            document.getElementById('playCount').textContent = `再生回数: ${playCount}/2`;
+            if (playCount >= 2) {
+                document.getElementById('playBtn').disabled = true;
+                document.getElementById('replayBtn').disabled = true;
+            }
+        }
+
+        // ナビゲーションボタン更新
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const finishBtn = document.getElementById('finishBtn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            
+            if (currentQuestion === 49) {
+                nextBtn.style.display = 'none';
+                finishBtn.style.display = 'inline-block';
+                finishBtn.disabled = selectedAnswers[currentQuestion] === -1;
+            } else {
+                nextBtn.style.display = 'inline-block';
+                finishBtn.style.display = 'none';
+                nextBtn.disabled = selectedAnswers[currentQuestion] === -1;
+            }
+        }
+
+        // 次の問題
+        function nextQuestion() {
+            if (currentQuestion < 49 && selectedAnswers[currentQuestion] !== -1) {
+                currentQuestion++;
+                showQuestion();
+            }
+        }
+
+        // 前の問題
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+            }
+        }
+
+        // 試験終了
+        function finishTest() {
+            clearInterval(timer);
+            window.speechSynthesis.cancel(); // 音声を停止
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            showResults();
+        }
+
+        // 結果表示
+        function showResults() {
+            let correctCount = 0;
+            
+            for (let i = 0; i < 50; i++) {
+                if (selectedAnswers[i] === questions[i].correct) {
+                    correctCount++;
+                }
+            }
+            
+            const accuracy = Math.round((correctCount / 50) * 100);
+            
+            document.getElementById('finalScore').textContent = correctCount;
+            document.getElementById('correctCount').textContent = correctCount;
+            document.getElementById('accuracy').textContent = accuracy;
+            
+            // レビューを生成
+            generateReview();
+        }
+
+        // レビュー生成
+        function generateReview() {
+            const reviewContainer = document.getElementById('reviewContainer');
+            reviewContainer.innerHTML = '<h3 style="margin-bottom: 20px; color: #333;">問題別詳細結果</h3>';
+            
+            for (let i = 0; i < 50; i++) {
+                const question = questions[i];
+                const userAnswer = selectedAnswers[i];
+                const isCorrect = userAnswer === question.correct;
+                
+                const reviewItem = document.createElement('div');
+                reviewItem.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                
+                const labels = ['(A)', '(B)', '(C)'];
+                const userAnswerText = userAnswer === -1 ? '未回答' : labels[userAnswer];
+                const correctAnswerText = labels[question.correct];
+                
+                reviewItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <strong>問題 ${i + 1}</strong>
+                        <span style="color: ${isCorrect ? '#28a745' : '#dc3545'}; font-weight: bold;">
+                            ${isCorrect ? '✓ 正解' : '✗ 不正解'}
+                        </span>
+                    </div>
+                    <div style="margin-bottom: 8px;"><strong>問題:</strong> ${question.question}</div>
+                    <div style="margin-bottom: 8px;"><strong>あなたの回答:</strong> ${userAnswerText}</div>
+                    <div style="margin-bottom: 8px;"><strong>正解:</strong> ${correctAnswerText}</div>
+                    <div style="margin-bottom: 8px;"><strong>正解の選択肢:</strong> ${question.options[question.correct]}</div>
+                    <div style="color: #666; font-size: 0.9em;"><strong>解説:</strong> ${question.explanation}</div>
+                `;
+                
+                reviewContainer.appendChild(reviewItem);
+            }
+        }
+
+        // テスト再開始
+        function restartTest() {
+            currentQuestion = 0;
+            selectedAnswers = new Array(50).fill(-1);
+            timeRemaining = 25 * 60;
+            playCount = 0;
+            
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('startScreen').style.display = 'block';
+            document.getElementById('progressFill').style.width = '0%';
+            
+            window.speechSynthesis.cancel();
+        }
+
+        // ページ読み込み時の初期化
+        window.addEventListener('load', () => {
+            // 初期状態の設定
+            document.getElementById('questionContainer').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'none';
+        });
+
+        // ページを離れる前の警告
+        window.addEventListener('beforeunload', (e) => {
+            if (document.getElementById('questionContainer').style.display !== 'none') {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
