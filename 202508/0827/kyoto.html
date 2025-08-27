@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>京都のお土産ガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Mincho ProN', 'HiraMinProN-W3', '源ノ明朝', 'Source Han Serif JP', 'Yu Mincho', '游明朝', serif;
+            line-height: 1.8;
+            background: linear-gradient(180deg, #f5f3f0 0%, #e8e2db 50%, #d4c5b0 100%);
+            min-height: 100vh;
+            color: #2c2c2c;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(200, 150, 100, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(150, 100, 80, 0.03) 0%, transparent 50%),
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(139, 69, 19, 0.01) 35px, rgba(139, 69, 19, 0.01) 70px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border-radius: 0;
+            border: 1px solid rgba(139, 69, 19, 0.1);
+            box-shadow: 0 4px 20px rgba(139, 69, 19, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b4513, #cd853f, #daa520, #cd853f, #8b4513);
+        }
+
+        header::after {
+            content: '◆';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(139, 69, 19, 0.3);
+            font-size: 1.5rem;
+        }
+
+        h1 {
+            color: #2c2c2c;
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .subtitle {
+            color: rgba(44, 44, 44, 0.8);
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 0.05em;
+            margin-top: 10px;
+        }
+
+        .souvenirs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .souvenir-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 0;
+            padding: 35px;
+            border: 1px solid rgba(139, 69, 19, 0.15);
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.08);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .souvenir-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 69, 19, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .souvenir-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .souvenir-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(139, 69, 19, 0.15);
+            border-color: rgba(139, 69, 19, 0.25);
+        }
+
+        .souvenir-card::after {
+            content: '○';
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: rgba(139, 69, 19, 0.1);
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .souvenir-card:hover::after {
+            color: rgba(139, 69, 19, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .souvenir-card h2 {
+            color: #2c2c2c;
+            font-size: 1.9rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+            padding-bottom: 10px;
+        }
+
+        .emoji {
+            font-size: 2.2rem;
+            filter: sepia(20%) saturate(120%) hue-rotate(20deg);
+        }
+
+        .description {
+            color: rgba(44, 44, 44, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.9;
+            font-size: 0.95rem;
+        }
+
+        .details {
+            background: rgba(245, 243, 240, 0.8);
+            padding: 20px;
+            border-radius: 0;
+            margin-top: 20px;
+            border-left: 3px solid rgba(139, 69, 19, 0.4);
+            border-top: 1px solid rgba(139, 69, 19, 0.1);
+            position: relative;
+        }
+
+        .details::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            width: 8px;
+            height: 8px;
+            background: rgba(139, 69, 19, 0.2);
+            border-radius: 50%;
+        }
+
+        .price {
+            font-weight: 500;
+            color: #8b4513;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .location {
+            color: rgba(139, 69, 19, 0.8);
+            margin-top: 5px;
+            font-size: 0.85rem;
+            letter-spacing: 0.02em;
+        }
+
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .feature-tag {
+            background: rgba(139, 69, 19, 0.1);
+            color: rgba(139, 69, 19, 0.8);
+            border: 1px solid rgba(139, 69, 19, 0.2);
+            padding: 6px 14px;
+            border-radius: 0;
+            font-size: 0.75rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(139, 69, 19, 0.05);
+            transition: left 0.3s ease;
+        }
+
+        .feature-tag:hover::before {
+            left: 0;
+        }
+
+        .feature-tag:hover {
+            background: rgba(139, 69, 19, 0.15);
+            border-color: rgba(139, 69, 19, 0.3);
+            color: rgba(139, 69, 19, 0.9);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 44, 44, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 50px;
+            border-radius: 0;
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(139, 69, 19, 0.2);
+            box-shadow: 0 20px 60px rgba(139, 69, 19, 0.15);
+            backdrop-filter: blur(15px);
+            animation: slideIn 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #8b4513, #cd853f, #daa520, #cd853f, #8b4513);
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: rgba(139, 69, 19, 0.6);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 69, 19, 0.2);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .close:hover {
+            color: rgba(139, 69, 19, 0.9);
+            background: rgba(139, 69, 19, 0.1);
+            border-color: rgba(139, 69, 19, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .modal-content h2 {
+            color: #2c2c2c;
+            font-weight: 400;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(139, 69, 19, 0.15);
+            letter-spacing: 0.05em;
+        }
+
+        .modal-content h3 {
+            color: rgba(139, 69, 19, 0.9);
+            font-weight: 500;
+            margin: 25px 0 15px 0;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+            position: relative;
+        }
+
+        .modal-content h3::before {
+            content: '◇';
+            position: absolute;
+            left: -20px;
+            color: rgba(139, 69, 19, 0.4);
+            font-size: 0.8rem;
+        }
+
+        .modal-content p, .modal-content li {
+            line-height: 1.8;
+            color: rgba(44, 44, 44, 0.8);
+            margin-bottom: 12px;
+        }
+
+        .modal-content ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .modal-content li {
+            margin-bottom: 8px;
+        }
+
+        .modal-content strong {
+            color: rgba(139, 69, 19, 0.9);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 15px;
+            }
+            
+            header {
+                padding: 40px 20px;
+                margin-bottom: 40px;
+            }
+            
+            .souvenirs-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+
+            .souvenir-card {
+                padding: 25px;
+            }
+
+            .modal-content {
+                padding: 30px 25px;
+                margin: 20px;
+                max-height: 90vh;
+            }
+
+            .modal-content h3::before {
+                left: -15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>京都のお土産ガイド</h1>
+            <p class="subtitle">古都の味と文化を持ち帰ろう</p>
+        </header>
+
+        <div class="souvenirs-grid">
+            <div class="souvenir-card" onclick="openModal('yatsuhashi')">
+                <h2><span class="emoji">🍘</span>八ツ橋</h2>
+                <p class="description">京都を代表する伝統的なお菓子。ニッキ（シナモン）の香りが特徴的で、生八ツ橋にはあんこや抹茶クリームが入っています。</p>
+                <div class="details">
+                    <div class="price">価格：500円〜2,000円</div>
+                    <div class="location">購入場所：清水寺周辺、京都駅、祇園</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">伝統菓子</span>
+                    <span class="feature-tag">個包装</span>
+                    <span class="feature-tag">日持ち良好</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('matcha')">
+                <h2><span class="emoji">🍵</span>宇治抹茶</h2>
+                <p class="description">世界的に有名な京都・宇治の抹茶。茶道用の高級品から、お菓子作りに使える抹茶パウダーまで幅広く揃います。</p>
+                <div class="details">
+                    <div class="price">価格：1,000円〜10,000円</div>
+                    <div class="location">購入場所：宇治、伊勢丹京都店、茶専門店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">高級品</span>
+                    <span class="feature-tag">本格派</span>
+                    <span class="feature-tag">ギフト向き</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('tofu')">
+                <h2><span class="emoji">🥢</span>湯波・豆腐</h2>
+                <p class="description">京都の精進料理文化から生まれた湯波や絹ごし豆腐。上品な味わいで、京料理の神髄を味わえます。</p>
+                <div class="details">
+                    <div class="price">価格：800円〜3,000円</div>
+                    <div class="location">購入場所：嵐山、南禅寺周辺、錦市場</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">ヘルシー</span>
+                    <span class="feature-tag">精進料理</span>
+                    <span class="feature-tag">要冷蔵</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('kimono')">
+                <h2><span class="emoji">👘</span>和装小物</h2>
+                <p class="description">京都らしい和装小物や手ぬぐい、風呂敷など。伝統的な柄から現代的なデザインまで豊富に揃います。</p>
+                <div class="details">
+                    <div class="price">価格：500円〜5,000円</div>
+                    <div class="location">購入場所：清水寺参道、祇園、西陣織会館</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">伝統工芸</span>
+                    <span class="feature-tag">実用的</span>
+                    <span class="feature-tag">記念品</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('sake')">
+                <h2><span class="emoji">🍶</span>京都の日本酒</h2>
+                <p class="description">伏見の名水で造られた日本酒は格別。月桂冠や黄桜など有名蔵元の銘酒が楽しめます。</p>
+                <div class="details">
+                    <div class="price">価格：1,500円〜8,000円</div>
+                    <div class="location">購入場所：伏見酒蔵、京都駅、百貨店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">地酒</span>
+                    <span class="feature-tag">大人向け</span>
+                    <span class="feature-tag">プレミアム</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('sweets')">
+                <h2><span class="emoji">🍮</span>京菓子</h2>
+                <p class="description">季節感あふれる上生菓子や干菓子。見た目も美しく、茶道文化とともに発達した京都ならではの芸術品です。</p>
+                <div class="details">
+                    <div class="price">価格：300円〜3,000円</div>
+                    <div class="location">購入場所：老舗和菓子店、茶店、百貨店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">季節限定</span>
+                    <span class="feature-tag">芸術的</span>
+                    <span class="feature-tag">茶道文化</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('kiyomizu')">
+                <h2><span class="emoji">🏺</span>清水焼</h2>
+                <p class="description">京都を代表する伝統陶磁器。美しい絵付けと上品な仕上がりで、茶器から花瓶まで幅広い作品があります。</p>
+                <div class="details">
+                    <div class="price">価格：2,000円〜50,000円</div>
+                    <div class="location">購入場所：清水寺周辺、陶器店、工房</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">伝統工芸</span>
+                    <span class="feature-tag">手作り</span>
+                    <span class="feature-tag">一点物</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('nishijin')">
+                <h2><span class="emoji">🎋</span>西陣織</h2>
+                <p class="description">千年の歴史を誇る京都の高級織物。帯や小物入れ、ネクタイなど現代的なアイテムも豊富です。</p>
+                <div class="details">
+                    <div class="price">価格：3,000円〜100,000円</div>
+                    <div class="location">購入場所：西陣織会館、織物工房、百貨店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">高級品</span>
+                    <span class="feature-tag">職人技</span>
+                    <span class="feature-tag">ギフト向き</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('incense')">
+                <h2><span class="emoji">🔥</span>京線香・お香</h2>
+                <p class="description">千年の都で培われた香りの文化。白檀、沈香など上質な香料を使った線香や香木は心を落ち着かせます。</p>
+                <div class="details">
+                    <div class="price">価格：800円〜10,000円</div>
+                    <div class="location">購入場所：寺院、香舗、土産店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">癒し効果</span>
+                    <span class="feature-tag">上質香料</span>
+                    <span class="feature-tag">瞑想向け</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('sensu')">
+                <h2><span class="emoji">🪭</span>京扇子</h2>
+                <p class="description">京都発祥の扇子は実用性と美しさを兼ね備えた逸品。舞扇から普段使いまで様々な種類があります。</p>
+                <div class="details">
+                    <div class="price">価格：1,500円〜20,000円</div>
+                    <div class="location">購入場所：扇子専門店、祇園、清水寺周辺</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">実用的</span>
+                    <span class="feature-tag">美術品</span>
+                    <span class="feature-tag">軽量</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('bamboo')">
+                <h2><span class="emoji">🎍</span>竹工芸品</h2>
+                <p class="description">嵯峨野の竹を使った伝統工芸品。籠、花器、茶道具など職人の技が光る美しい作品が揃います。</p>
+                <div class="details">
+                    <div class="price">価格：2,500円〜30,000円</div>
+                    <div class="location">購入場所：嵯峨野、竹工房、工芸品店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">自然素材</span>
+                    <span class="feature-tag">職人技</span>
+                    <span class="feature-tag">環境配慮</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('tsukemono')">
+                <h2><span class="emoji">🥒</span>京漬物</h2>
+                <p class="description">千枚漬け、すぐき、しば漬けなど京都の代表的な漬物。上品な味わいと美しい色合いが魅力です。</p>
+                <div class="details">
+                    <div class="price">価格：600円〜3,000円</div>
+                    <div class="location">購入場所：錦市場、漬物専門店、百貨店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">伝統食品</span>
+                    <span class="feature-tag">季節限定</span>
+                    <span class="feature-tag">健康食品</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('kyoyuzen')">
+                <h2><span class="emoji">🌸</span>京友禅小物</h2>
+                <p class="description">華麗な染めの技法で作られた京友禅の小物。ポーチ、ハンカチ、アクセサリーなど日常使いできる美しいアイテム。</p>
+                <div class="details">
+                    <div class="price">価格：1,200円〜15,000円</div>
+                    <div class="location">購入場所：友禅工房、祇園、手工芸品店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">伝統染色</span>
+                    <span class="feature-tag">実用的</span>
+                    <span class="feature-tag">華麗</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('tea')">
+                <h2><span class="emoji">🍃</span>京番茶・ほうじ茶</h2>
+                <p class="description">京都の日常茶として愛される番茶とほうじ茶。香ばしい香りとまろやかな味わいが特徴的です。</p>
+                <div class="details">
+                    <div class="price">価格：800円〜4,000円</div>
+                    <div class="location">購入場所：茶舗、宇治、京都駅</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">日常茶</span>
+                    <span class="feature-tag">香ばしい</span>
+                    <span class="feature-tag">カフェイン少</span>
+                </div>
+            </div>
+
+            <div class="souvenir-card" onclick="openModal('sweets_modern')">
+                <h2><span class="emoji">🧁</span>京都スイーツ</h2>
+                <p class="description">抹茶ケーキ、わらび餅、京都限定のチョコレートなど、伝統と現代が融合した新しいスイーツ。</p>
+                <div class="details">
+                    <div class="price">価格：500円〜4,000円</div>
+                    <div class="location">購入場所：洋菓子店、カフェ、百貨店</div>
+                </div>
+                <div class="features">
+                    <span class="feature-tag">モダン</span>
+                    <span class="feature-tag">抹茶風味</span>
+                    <span class="feature-tag">お洒落</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- モーダル -->
+    <div id="modal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const souvenirDetails = {
+            yatsuhashi: {
+                title: "八ツ橋",
+                emoji: "🍘",
+                content: `
+                    <h2>🍘 八ツ橋の詳細情報</h2>
+                    <h3>歴史と特徴</h3>
+                    <p>八ツ橋は江戸時代から続く京都の代表的なお菓子です。筝の形に模した焼き菓子で、ニッキ（シナモン）の香りが特徴的です。</p>
+                    
+                    <h3>種類</h3>
+                    <ul>
+                        <li><strong>焼き八ツ橋：</strong>伝統的な堅焼きタイプ</li>
+                        <li><strong>生八ツ橋：</strong>柔らかい生地にあんこを包んだもの</li>
+                        <li><strong>季節限定：</strong>抹茶、桜、栗などの限定フレーバー</li>
+                    </ul>
+                    
+                    <h3>おすすめ購入場所</h3>
+                    <ul>
+                        <li>清水寺参道の土産物店</li>
+                        <li>京都駅八条口の専門店</li>
+                        <li>祇園の老舗和菓子店</li>
+                    </ul>
+                    
+                    <h3>保存方法</h3>
+                    <p>直射日光を避け、涼しい場所で保存。開封後は早めにお召し上がりください。</p>
+                `
+            },
+            matcha: {
+                title: "宇治抹茶",
+                emoji: "🍵",
+                content: `
+                    <h2>🍵 宇治抹茶の詳細情報</h2>
+                    <h3>宇治抹茶の歴史</h3>
+                    <p>鎌倉時代から続く宇治の茶文化。日本の茶道を支える最高品質の抹茶として世界的に有名です。</p>
+                    
+                    <h3>グレード</h3>
+                    <ul>
+                        <li><strong>薄茶用：</strong>日常的な茶道で使用（1,000円〜3,000円）</li>
+                        <li><strong>濃茶用：</strong>高級茶道で使用（3,000円〜10,000円）</li>
+                        <li><strong>料理用：</strong>お菓子作りなどに最適（800円〜2,000円）</li>
+                    </ul>
+                    
+                    <h3>有名ブランド</h3>
+                    <ul>
+                        <li>辻利：創業1860年の老舗</li>
+                        <li>伊藤久右衛門：宇治の名門茶舗</li>
+                        <li>福寿園：茶道家も愛用する高級ブランド</li>
+                    </ul>
+                    
+                    <h3>選び方のポイント</h3>
+                    <p>鮮やかな緑色で、香り高く、苦味と甘味のバランスが取れたものを選びましょう。</p>
+                `
+            },
+            tofu: {
+                title: "湯波・豆腐",
+                emoji: "🥢",
+                content: `
+                    <h2>🥢 京都の湯波・豆腐</h2>
+                    <h3>京料理の神髄</h3>
+                    <p>京都の軟水で作られる豆腐と湯波は、精進料理の伝統から生まれた京都ならではの味わいです。</p>
+                    
+                    <h3>特徴</h3>
+                    <ul>
+                        <li><strong>絹ごし豆腐：</strong>なめらかで上品な食感</li>
+                        <li><strong>生湯波：</strong>豆乳の表面にできる薄い膜、繊細な味</li>
+                        <li><strong>乾燥湯波：</strong>保存がきく、出汁でもどして使用</li>
+                    </ul>
+                    
+                    <h3>有名店舗</h3>
+                    <ul>
+                        <li>嵯峨とうふ稲本：嵐山の老舗</li>
+                        <li>森嘉：創業1877年の豆腐専門店</li>
+                        <li>湯波半：錦市場の湯波専門店</li>
+                    </ul>
+                    
+                    <h3>楽しみ方</h3>
+                    <p>シンプルに醤油で味わうのが基本。京都らしい上品な出汁との組み合わせも絶品です。</p>
+                `
+            },
+            kimono: {
+                title: "和装小物",
+                emoji: "👘",
+                content: `
+                    <h2>👘 京都の和装小物</h2>
+                    <h3>伝統工芸の技</h3>
+                    <p>西陣織、京友禅、清水焼など、京都の伝統工芸技術を活かした美しい和装小物が豊富に揃います。</p>
+                    
+                    <h3>人気アイテム</h3>
+                    <ul>
+                        <li><strong>風呂敷：</strong>様々なサイズと柄、実用的</li>
+                        <li><strong>手ぬぐい：</strong>京都らしい柄、コレクション性が高い</li>
+                        <li><strong>扇子：</strong>夏の必需品、美しい絵柄</li>
+                        <li><strong>帯締め・帯揚げ：</strong>着物に合わせるアクセサリー</li>
+                    </ul>
+                    
+                    <h3>購入スポット</h3>
+                    <ul>
+                        <li>清水寺参道：観光地価格だが品揃え豊富</li>
+                        <li>祇園：高品質な商品が多い</li>
+                        <li>西陣織会館：本格的な西陣織製品</li>
+                    </ul>
+                    
+                    <h3>選び方のコツ</h3>
+                    <p>用途を考えて選ぶのがポイント。実用性重視か、装飾用かを決めてから購入しましょう。</p>
+                `
+            },
+            sake: {
+                title: "京都の日本酒",
+                emoji: "🍶",
+                content: `
+                    <h2>🍶 京都の日本酒</h2>
+                    <h3>伏見の名水</h3>
+                    <p>伏見は日本三大酒処の一つ。軟水の伏見の水で造られる日本酒は、まろやかで上品な味わいが特徴です。</p>
+                    
+                    <h3>有名蔵元</h3>
+                    <ul>
+                        <li><strong>月桂冠：</strong>全国的に有名、伏見の代表格</li>
+                        <li><strong>黄桜：</strong>カッパのCMで親しまれる老舗</li>
+                        <li><strong>キザクラ：</strong>地元で愛される蔵元</li>
+                        <li><strong>玉乃光：</strong>純米酒にこだわる高級ブランド</li>
+                    </ul>
+                    
+                    <h3>おすすめ商品</h3>
+                    <ul>
+                        <li>大吟醸：最高級品、ギフトに最適</li>
+                        <li>純米酒：米の旨味を感じられる</li>
+                        <li>季節限定酒：その時期だけの特別な味</li>
+                    </ul>
+                    
+                    <h3>購入場所</h3>
+                    <p>伏見の酒蔵直売所では試飲も可能。京都駅や百貨店でも購入できます。</p>
+                `
+            },
+            sweets: {
+                title: "京菓子",
+                emoji: "🍮",
+                content: `
+                    <h2>🍮 京菓子の世界</h2>
+                    <h3>茶道とともに発達</h3>
+                    <p>京菓子は茶道の発達とともに進化した芸術品。季節感を大切にし、見た目の美しさと上品な甘さが特徴です。</p>
+                    
+                    <h3>種類</h3>
+                    <ul>
+                        <li><strong>上生菓子：</strong>季節を表現した芸術的な和菓子</li>
+                        <li><strong>干菓子：</strong>乾燥させた保存の利く菓子</li>
+                        <li><strong>半生菓子：</strong>しっとりとした食感の中間タイプ</li>
+                    </ul>
+                    
+                    <h3>有名老舗</h3>
+                    <ul>
+                        <li>鶴屋吉信：創業1803年、皇室御用達</li>
+                        <li>虎屋：室町時代創業の超老舗</li>
+                        <li>俵屋吉富：京菓子の名門</li>
+                        <li>末富：美しい意匠で有名</li>
+                    </ul>
+                    
+                    <h3>季節の楽しみ</h3>
+                    <p>春は桜、夏は涼菓、秋は紅葉、冬は雪景色など、四季折々の美しさを表現した京菓子をお楽しみください。</p>
+                `
+            },
+            kiyomizu: {
+                title: "清水焼",
+                emoji: "🏺",
+                content: `
+                    <h2>🏺 清水焼の世界</h2>
+                    <h3>400年の歴史</h3>
+                    <p>清水寺周辺で発達した京都の代表的な陶磁器。江戸時代初期から続く伝統的な技法で作られています。</p>
+                    
+                    <h3>特徴</h3>
+                    <ul>
+                        <li><strong>美しい絵付け：</strong>繊細で色鮮やかな模様</li>
+                        <li><strong>上品な仕上がり：</strong>なめらかな手触りと光沢</li>
+                        <li><strong>幅広いアイテム：</strong>茶器、花瓶、皿、置物など</li>
+                    </ul>
+                    
+                    <h3>有名な窯元</h3>
+                    <ul>
+                        <li>森陶器館：伝統的な技法を守る老舗</li>
+                        <li>清水六兵衛：200年以上の歴史を持つ名門</li>
+                        <li>加藤卓男工房：人間国宝の技を継承</li>
+                    </ul>
+                    
+                    <h3>選び方</h3>
+                    <p>用途と好みの絵柄で選びましょう。茶道用なら伝統的な模様、普段使いなら現代的なデザインもおすすめです。</p>
+                `
+            },
+            nishijin: {
+                title: "西陣織",
+                emoji: "🎋",
+                content: `
+                    <h2>🎋 西陣織の魅力</h2>
+                    <h3>千年の織物文化</h3>
+                    <p>平安時代から続く京都西陣地区の高級絹織物。複雑な文様と美しい色彩が特徴的です。</p>
+                    
+                    <h3>製品種類</h3>
+                    <ul>
+                        <li><strong>帯：</strong>着物用の正装帯、最高級品</li>
+                        <li><strong>小物：</strong>財布、名刺入れ、ポーチなど</li>
+                        <li><strong>ネクタイ：</strong>男性向けの上品なアイテム</li>
+                        <li><strong>テーブルランナー：</strong>現代的な使い方</li>
+                    </ul>
+                    
+                    <h3>技法の特徴</h3>
+                    <ul>
+                        <li>先染めの絹糸を使用</li>
+                        <li>ジャカード織機による精密な模様</li>
+                        <li>金糸・銀糸を使った豪華な仕上がり</li>
+                    </ul>
+                    
+                    <h3>お手入れ方法</h3>
+                    <p>直射日光を避け、湿気の少ない場所で保管。汚れた場合は専門店でのクリーニングをおすすめします。</p>
+                `
+            },
+            incense: {
+                title: "京線香・お香",
+                emoji: "🔥",
+                content: `
+                    <h2>🔥 京都の香り文化</h2>
+                    <h3>千年の香りの歴史</h3>
+                    <p>平安時代の貴族文化から続く香りの伝統。仏教とともに発達した線香文化が現代まで受け継がれています。</p>
+                    
+                    <h3>主な種類</h3>
+                    <ul>
+                        <li><strong>白檀：</strong>上品で甘い香り、リラックス効果</li>
+                        <li><strong>沈香：</strong>深みのある香り、瞑想に最適</li>
+                        <li><strong>伽羅：</strong>最高級品、希少価値が高い</li>
+                        <li><strong>匂い袋：</strong>持ち歩ける香り、衣類用</li>
+                    </ul>
+                    
+                    <h3>有名老舗</h3>
+                    <ul>
+                        <li>山田松香木店：創業1657年の老舗</li>
+                        <li>鳩居堂：文房具と香の専門店</li>
+                        <li>薫玉堂：天然香料にこだわる名店</li>
+                    </ul>
+                    
+                    <h3>楽しみ方</h3>
+                    <p>線香は仏壇や瞑想に、匂い袋は衣類の香りづけに。現代的な使い方としてルームフレグランスとしても人気です。</p>
+                `
+            },
+            sensu: {
+                title: "京扇子",
+                emoji: "🪭",
+                content: `
+                    <h2>🪭 京扇子の世界</h2>
+                    <h3>扇子発祥の地</h3>
+                    <p>平安時代に京都で生まれた扇子は、実用性と芸術性を兼ね備えた日本独自の文化です。</p>
+                    
+                    <h3>扇子の種類</h3>
+                    <ul>
+                        <li><strong>夏扇子：</strong>涼をとるための実用扇</li>
+                        <li><strong>舞扇：</strong>日本舞踊や能楽用の芸術扇</li>
+                        <li><strong>茶席扇：</strong>茶道で使う小ぶりな扇</li>
+                        <li><strong>飾り扇：</strong>装飾用の美術品</li>
+                    </ul>
+                    
+                    <h3>製作工程</h3>
+                    <ul>
+                        <li>竹の扇骨作り：職人による精密な加工</li>
+                        <li>扇面貼り：和紙や絹への美しい絵付け</li>
+                        <li>仕上げ：全体のバランス調整</li>
+                    </ul>
+                    
+                    <h3>名店紹介</h3>
+                    <p>白竹堂、宮脇賣扇庵など、200年以上の歴史を持つ老舗が伝統技法を守り続けています。</p>
+                `
+            },
+            bamboo: {
+                title: "竹工芸品",
+                emoji: "🎍",
+                content: `
+                    <h2>🎍 京都の竹工芸</h2>
+                    <h3>嵯峨野の竹文化</h3>
+                    <p>嵯峨野・嵐山地区の豊富な竹を使った工芸品。自然素材ならではの美しさと機能性が魅力です。</p>
+                    
+                    <h3>主な製品</h3>
+                    <ul>
+                        <li><strong>花籠：</strong>茶道や華道で使用する繊細な籠</li>
+                        <li><strong>茶道具：</strong>茶杓、花入れなど茶の湯用品</li>
+                        <li><strong>日用品：</strong>箸、弁当箱、コップなど</li>
+                        <li><strong>インテリア：</strong>照明器具、置物など</li>
+                    </ul>
+                    
+                    <h3>竹の特性</h3>
+                    <ul>
+                        <li>軽量で丈夫</li>
+                        <li>抗菌・消臭効果</li>
+                        <li>環境に優しい天然素材</li>
+                        <li>使い込むほどに味わい深くなる</li>
+                    </ul>
+                    
+                    <h3>お手入れ</h3>
+                    <p>使用後は乾燥させ、定期的に軽く油分を補給すると長持ちします。直射日光は避けてください。</p>
+                `
+            },
+            tsukemono: {
+                title: "京漬物",
+                emoji: "🥒",
+                content: `
+                    <h2>🥒 京都の漬物文化</h2>
+                    <h3>千年の漬物文化</h3>
+                    <p>京都の精進料理文化から発展した漬物。上品な味わいと美しい色合いが特徴的です。</p>
+                    
+                    <h3>代表的な京漬物</h3>
+                    <ul>
+                        <li><strong>千枚漬け：</strong>聖護院かぶの薄切り、冬の代表</li>
+                        <li><strong>すぐき：</strong>上賀茂名産、独特の酸味</li>
+                        <li><strong>しば漬け：</strong>大原の名産、紫蘇と茄子</li>
+                        <li><strong>西利の味すぐき：</strong>現代風にアレンジ</li>
+                    </ul>
+                    
+                    <h3>有名店舗</h3>
+                    <ul>
+                        <li>村上重本店：創業1804年の老舗</li>
+                        <li>西利：京漬物の代表的ブランド</li>
+                        <li>大安：錦市場の人気店</li>
+                    </ul>
+                    
+                    <h3>健康効果</h3>
+                    <p>乳酸菌による整腸効果、野菜の栄養素保持、塩分控えめの上品な味付けで健康的です。</p>
+                `
+            },
+            kyoyuzen: {
+                title: "京友禅小物",
+                emoji: "🌸",
+                content: `
+                    <h2>🌸 京友禅の美</h2>
+                    <h3>華麗な染めの技法</h3>
+                    <p>江戸時代に宮崎友禅斎によって完成された染色技法。絵画的な美しさが特徴の京都を代表する工芸品です。</p>
+                    
+                    <h3>技法の特徴</h3>
+                    <ul>
+                        <li><strong>手描き友禅：</strong>一点一点手描きによる最高級品</li>
+                        <li><strong>型友禅：</strong>型紙を使った量産可能な技法</li>
+                        <li><strong>ろうけつ染め：</strong>伝統的な防染技法</li>
+                    </ul>
+                    
+                    <h3>小物アイテム</h3>
+                    <ul>
+                        <li>ハンカチ：日常使いできる上品なアイテム</li>
+                        <li>ポーチ・財布：機能的で美しい</li>
+                        <li>スカーフ：洋装にも合う現代的デザイン</li>
+                        <li>がま口：伝統的な形の小銭入れ</li>
+                    </ul>
+                    
+                    <h3>選び方のポイント</h3>
+                    <p>色柄は季節感を大切に。春は桜、夏は水辺の風景、秋は紅葉など、四季を感じるデザインがおすすめです。</p>
+                `
+            },
+            tea: {
+                title: "京番茶・ほうじ茶",
+                emoji: "🍃",
+                content: `
+                    <h2>🍃 京都の日常茶</h2>
+                    <h3>庶民の味わい</h3>
+                    <p>抹茶とは対照的に、京都の庶民に愛され続けてきた日常茶。香ばしく優しい味わいが特徴です。</p>
+                    
+                    <h3>京番茶の特徴</h3>
+                    <ul>
+                        <li><strong>大きな葉：</strong>成熟した茶葉を使用</li>
+                        <li><strong>軽い味わい：</strong>タンニンが少なく渋みが少ない</li>
+                        <li><strong>カフェイン控えめ：</strong>夜でも安心</li>
+                        <li><strong>独特の香り：</strong>高温で炒った香ばしさ</li>
+                    </ul>
+                    
+                    <h3>ほうじ茶の魅力</h3>
+                    <ul>
+                        <li>香ばしい焙煎の香り</li>
+                        <li>胃に優しい性質</li>
+                        <li>冷茶でも美味しい</li>
+                        <li>料理との相性が良い</li>
+                    </ul>
+                    
+                    <h3>有名ブランド</h3>
+                    <p>一保堂、辻利、福寿園などの老舗茶舗で、厳選された京番茶・ほうじ茶をお求めいただけます。</p>
+                `
+            },
+            sweets_modern: {
+                title: "京都スイーツ",
+                emoji: "🧁",
+                content: `
+                    <h2>🧁 現代の京都スイーツ</h2>
+                    <h3>伝統と革新の融合</h3>
+                    <p>古都の伝統的な食材を現代的な技法で仕上げた新しいスイーツ。京都ならではの味わいを現代風にアレンジ。</p>
+                    
+                    <h3>人気スイーツ</h3>
+                    <ul>
+                        <li><strong>抹茶スイーツ：</strong>ケーキ、アイス、チョコレート</li>
+                        <li><strong>わらび餅：</strong>とろける食感の現代風</li>
+                        <li><strong>京都限定品：</strong>地域限定のお菓子</li>
+                        <li><strong>和洋折衷：</strong>京都らしい創作スイーツ</li>
+                    </ul>
+                    
+                    <h3>有名店舗</h3>
+                    <ul>
+                        <li>% Arabica：世界的に有名なコーヒーショップ</li>
+                        <li>茶寮都路里：祇園の抹茶パフェ専門店</li>
+                        <li>然花抄院：京都らしいモダン和菓子</li>
+                        <li>Chocolaterie CALVA：京都産素材のショコラ</li>
+                    </ul>
+                    
+                    <h3>お土産として</h3>
+                    <p>個包装で日持ちがよく、京都らしいパッケージデザインのものが人気。抹茶味は特に喜ばれます。</p>
+                `
+            }
+        };
+
+        function openModal(souvenirKey) {
+            const modal = document.getElementById('modal');
+            const modalBody = document.getElementById('modal-body');
+            const modalContent = modal.querySelector('.modal-content');
+            const souvenir = souvenirDetails[souvenirKey];
+            
+            modalBody.innerHTML = souvenir.content;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            modalContent.style.opacity = '0';
+            modalContent.style.transform = 'translateY(30px) scale(0.95)';
+            
+            requestAnimationFrame(() => {
+                modalContent.style.transition = 'all 0.4s cubic-bezier(0.23, 1, 0.320, 1)';
+                modalContent.style.opacity = '1';
+                modalContent.style.transform = 'translateY(0) scale(1)';
+            });
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            
+            const modal = document.getElementById('modal');
+            const modalContent = modal.querySelector('.modal-content');
+            
+            modalContent.style.transition = 'all 0.3s cubic-bezier(0.23, 1, 0.320, 1)';
+            modalContent.style.opacity = '0';
+            modalContent.style.transform = 'translateY(20px) scale(0.95)';
+            
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.souvenir-card');
+            
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.transform = 'translateY(0)';
+                        }, index * 100);
+                    }
+                });
+            }, observerOptions);
+
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `all 0.6s cubic-bezier(0.23, 1, 0.320, 1) ${index * 0.1}s`;
+                observer.observe(card);
+            });
+
+            const header = document.querySelector('header');
+            header.style.opacity = '0';
+            header.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                header.style.transition = 'all 0.8s cubic-bezier(0.23, 1, 0.320, 1)';
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+            }, 100);
+        });
+
+        // ESCキーでモーダルを閉じる
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
